@@ -60,7 +60,7 @@
           <div class="mui-table-view-cell mui-input-row mui-checkbox mui-media mui-left">
               <input style="top: 18px;" :id="'check' +da.id" v-model="cleaners" :value="da.id" type="checkbox" @change="selected($event,da.id);" :disabled="cleaners.indexOf(da.id)<0 && cleaners.length >=2">
               <img class="mui-media-object mui-pull-left" style="border-radius: 100%" src="http://via.placeholder.com/150x150">
-              <button type="button" class="mui-btn mui-btn-primary" @click="view(da)">View</button>
+              <button type="button" class="mui-btn mui-btn-primary view-btn" @click="view(da)">View</button>
               <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body">
                 <h4 class='mui-ellipsis' style="text-align:left">{{da.name}}&nbsp;&nbsp;&nbsp;{{da.phone}}&nbsp;</h4>
@@ -182,5 +182,9 @@ export default {
 
 .mui-table-view-condensed button {
   padding: 6px;
+}
+
+.view-btn{
+  width: auto;
 }
 </style>

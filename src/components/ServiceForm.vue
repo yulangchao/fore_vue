@@ -118,7 +118,8 @@ export default {
     };
   },
   mounted() {
-    if (!this.$route.query.order_type) {
+    if (!this.$route.params.order_type) {
+      mui.toast("Please create your order from the main page!");
       this.$router.push("/service");
     }
 
@@ -140,9 +141,9 @@ export default {
     weuicss.setAttribute("rel", "stylesheet");
     document.head.appendChild(weuicss);
     this.initAutocomplete();
-    if (this.$route.query.order_type == 1) {
+    if (this.$route.params.order_type == 1) {
       this.title = "AIRBNB CLEANING";
-    } else if (this.$route.query.order_type == 2) {
+    } else if (this.$route.params.order_type == 2) {
       this.title = "HOUSE CLEANING";
     } else {
       this.title = "HOUSE CLEANING";
@@ -152,7 +153,7 @@ export default {
     createOrder: function() {
 
       let details = {
-        order_type: this.$route.query.order_type,
+        order_type: this.$route.params.order_type,
         name: this.name,
         phone: this.phone,
         time: this.time,
