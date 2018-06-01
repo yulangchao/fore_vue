@@ -154,8 +154,9 @@ export default {
       setTimeout(() => {
         axios
           .post(
-            "http://foreclean.tk:8000/api/getCleanerListByOrder",
+            "http://foreclean.tk:8000/api/createOrder",
             JSON.stringify({
+              order_type: this.order.order_type,
               name: this.order.name,
               phone: this.order.phone,
               address: this.order.address,
@@ -166,6 +167,7 @@ export default {
               time: this.order.time.replace("T", " "),
               start_time: start_time,
               end_time: end_time,
+              selected_cleaners: this.cleaners
             })
           )
           .then(response => {
