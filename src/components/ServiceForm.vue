@@ -52,38 +52,28 @@
 				<div class="weui-cells">
 					<div class="mui-input-row">
 						<label>Bed Rooms</label>
-						<div class="mui-numbox">
+						<div class="mui-numbox rooms-num">
 							<button class="mui-btn mui-btn-numbox-minus" type="button" @click="bedroom<=0 ? 0 :bedroom--">-</button>
 							<input class="mui-input-numbox" type="number" v-model="bedroom" />
 							<button class="mui-btn mui-btn-numbox-plus" type="button" @click="bedroom++">+</button>
 						</div>
 					</div>
-					<div class="mui-input-row">
+					<div class="mui-input-row rooms-num">
 						<label>Bath Rooms</label>
 						<div class="mui-numbox">
 							<button class="mui-btn mui-btn-numbox-minus" type="button" @click="bathroom<=0 ? 0 :bathroom--">-</button>
 							<input class="mui-input-numbox" type="number" v-model="bathroom" placeholder="0" />
 							<button class="mui-btn mui-btn-numbox-plus" type="button" @click="bathroom++">+</button>
 						</div>
-                    </div>
-                    <div class="weui-cells weui-cells_checkbox">
-                            <div class="mui-input-row mui-checkbox ">
-                                <label>Checkbox1</label>
-                                <input v-model="additional" type="checkbox" value=1>
-                            </div>
-                            <div class="mui-input-row mui-checkbox ">
-                                <label>Checkbox2</label>
-                                <input v-model="additional" type="checkbox" value=2>
-                            </div>
-                            <div class="mui-input-row mui-checkbox ">
-                                <label>Checkbox3</label>
-                                <input v-model="additional" type="checkbox" value=3>
-                            </div>                           
-														<div class="mui-input-row mui-checkbox ">
-                                <label>Checkbox4</label>
-                                <input v-model="additional" type="checkbox" value=4>
-                            </div>
-                        </div>
+          </div>
+          <div class="weui-cells weui-cells_checkbox">
+              <template v-for="addition in others">
+                              <div class="mui-input-row mui-checkbox ">
+                                  <label>{{getAdditionalName(addition)}}</label>
+                                  <input v-model="additional" type="checkbox" :value="addition">
+                              </div>
+              </template>
+          </div>
 				</div>
 
 
@@ -92,7 +82,7 @@
 		</div>
 		<nav class="mui-bar mui-bar-tab">
 				
-					<a class="weui-btn weui-btn_primary" @click="createOrder" type="submit" id="showTooltips">Create Order</a>
+					<a class="weui-btn weui-btn_primary" @click="createOrder" type="submit" id="showTooltips">Next</a>
 				
 		</nav>
   </div>
@@ -114,40 +104,55 @@ export default {
       bathroom: 0,
       address: "",
       additional: [],
-      position: null
+      position: null,
+      others: []
     };
   },
   mounted() {
+    
     if (!this.$route.params.order_type) {
       mui.toast("Please create your order from the main page!");
       this.$router.push("/service");
+      return;
     }
-
-    // if (this.$route.params.order) {
-    //   console.log(this.$route.params.order);
-    // }
-
-    let weui = document.createElement("script");
-    weui.setAttribute(
-      "src",
-      "https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"
-    );
-    document.head.appendChild(weui);
-    let weuicss = document.createElement("link");
-    weuicss.setAttribute(
-      "href",
-      "https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"
-    );
-    weuicss.setAttribute("rel", "stylesheet");
-    document.head.appendChild(weuicss);
+    this.others = this.$route.params.others;
+    if (this.$route.params.order) {
+      console.log(this.$route.params.order);
+      let order = this.$route.params.order
+      this.phone = order.phone;
+      this.name = order.name;
+      this.time = order.time;
+      this.additional = order.additional;
+      this.bathroom = order.bathroom;
+      this.bedroom = order.bedroom;
+      this.city = order.city;
+      this.address = order.address;
+      this.position = order.position;
+      this.others = order.others;
+    }
+    // let weui = document.createElement("script");
+    // weui.setAttribute(
+    //   "src",
+    //   "https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"
+    // );
+    // document.head.appendChild(weui);
+    // let weuicss = document.createElement("link");
+    // weuicss.setAttribute(
+    //   "href",
+    //   "https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"
+    // );
+    // weuicss.setAttribute("rel", "stylesheet");
+    // document.head.appendChild(weuicss);
     this.initAutocomplete();
     if (this.$route.params.order_type == 1) {
       this.title = "AIRBNB CLEANING";
     } else if (this.$route.params.order_type == 2) {
-      this.title = "HOUSE CLEANING";
+      this.title = "CARPET CLEANING";
     } else {
       this.title = "HOUSE CLEANING";
     }
+    
+
   },
   methods: {
     createOrder: function() {
@@ -162,8 +167,9 @@ export default {
         bedroom: this.bedroom,
         bathroom: this.bathroom,
         additional: this.additional,
-        hours: 3,
-        position: this.position
+        hours: this.getHour(this.$route.params.order_type,this.bedroom,this.additional),
+        position: this.position,
+        others: this.others
       };
 
       if (!this.name) {
@@ -223,7 +229,8 @@ export default {
 };
 </script>
 
-<style  lang="scss" scoped>
+<style scoped>
+@import "https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css";
 input,
 select {
   height: auto !important;
@@ -248,5 +255,12 @@ select {
 }
 .weui-cells__title {
   margin-top: 0px;
+}
+.rooms-num label {
+    width: 50%;
+    
+}
+.mui-input-row label {
+    text-align: left
 }
 </style>

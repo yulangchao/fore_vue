@@ -22,6 +22,16 @@
 				<span class="mui-tab-label">Settings</span>
 			</router-link>
 		</nav>
+    <!-- modal -->
+    <div id="modal" :class="modalClass" v-if="cleaner != null">
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-icon-close mui-pull-right" @click="closeModal"></a>
+					<h1 class="mui-title">{{cleaner.name}}</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<p class="mui-content-padded">The contents of my modal go here. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut.</p>
+				</div>
+		</div>
 		<div class="mui-content">
       <div>
 				<div class="">
@@ -43,16 +53,16 @@
 			</div>
 			<ul class="mui-table-view">
         <template v-for="da in data">
-          <li class="mui-table-view-cell mui-media">
-            <a href="javascript:;">
-              <h5 class="mui-pull-right">Sex: {{da.sex == 1? "Male": "Femail"}}</h5>
+          <div class="mui-table-view-cell mui-input-row mui-media mui-left">
+              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="'http://foreclean.tk:8000/storage/' + da.avatar">
+              <button type="button" class="mui-btn mui-btn-primary view-btn" @click="view(da)">View</button>
+              <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body">
                 <h4 class='mui-ellipsis' style="text-align:left">{{da.name}}&nbsp;&nbsp;&nbsp;{{da.phone}}&nbsp;</h4>
-                <p class='mui-ellipsis' style="text-align:left">{{da.created_at}}&nbsp;</p>
-                <p class='mui-ellipsis mui-pull-left'>{{da.email}}&nbsp;</p>
+                <p class='mui-ellipsis' style="text-align:left">City: {{da.city}}&nbsp; Rate: {{da.rate}}</p>
               </div>
-            </a>
-          </li>
+           
+          </div>
         </template>
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
@@ -74,14 +84,23 @@ export default {
       busy: false,
       data: [],
       page: 0,
-      loading: true
+      loading: true,
+      cleaner: null,
+      modalClass: "mui-modal"
     };
   },
   mounted() {
   },
   methods: {
+    view: function(da) {
+      this.cleaner = da;
+      this.modalClass = "mui-modal mui-active";
+    },
+    closeModal: function(da) {
+      this.modalClass = "mui-modal";
+    },
     redirect: function() {
-      this.$router.replace("hello");
+      // this.$router.replace("hello");
     },
     loadMore: function() {
       this.busy = true;
@@ -129,5 +148,9 @@ export default {
     text-align-last: center; 
     padding: 15px 50px;
     margin-bottom: 0px;
+}
+
+.view-btn {
+  width: auto;
 }
 </style>

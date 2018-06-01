@@ -25,7 +25,7 @@
 		<div class="mui-content">
 			<ul class="mui-table-view  mui-text-center">
 					<div class="mui-card">
-						<router-link :to="{ name: 'ServiceForm', params: { order_type: 1 }}">
+						<router-link :to="{ name: 'ServiceForm', params: { order_type: 1, others: getAdditionals(1) }}">
 							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/QGX5vpdWrTS24uVgVcuh.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
@@ -35,17 +35,17 @@
 						</router-link>
 					</div>
 					<div class="mui-card">
-						<router-link :to="{ name: 'ServiceForm', params: { order_type: 2 }}">
+						<router-link :to="{ name: 'ServiceForm', params: { order_type: 2, others: getAdditionals(2) }}">
 							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/i1pfxjezYz9dV3pqJYNp.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
-									<h3>HOUSE CLEANING</h3>
+									<h3>CARPET CLEANING</h3>
 								</div>
 							</div>
 							</router-link>
 					</div>
 					<div class="mui-card">
-						<router-link :to="{ name: 'ServiceForm', params: { order_type: 3 }}">
+						<router-link :to="{ name: 'ServiceForm', params: { order_type: 3, others: getAdditionals(3) }}">
 							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/F87bJWudFFzD5ITZn2Lk.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
