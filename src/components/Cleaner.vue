@@ -22,51 +22,46 @@
 				<span class="mui-tab-label">Settings</span>
 			</router-link>
 		</nav>
-    <!-- modal -->
-    <div id="modal" :class="modalClass" v-if="cleaner != null">
-				<header class="mui-bar mui-bar-nav">
-					<a class="mui-icon mui-icon-close mui-pull-right" @click="closeModal"></a>
-					<h1 class="mui-title">{{cleaner.name}}</h1>
-				</header>
-				<div class="mui-content" style="height: 100%;">
-					<p class="mui-content-padded">The contents of my modal go here. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut.</p>
-				</div>
-		</div>
 		<div class="mui-content">
       <div>
 				<div class="">
-        <select style="float:left;" class="mui-btn mui-btn-block">
-					<option value="item-1">item-1</option>
-					<option value="item-2">item-2</option>
-					<option value="item-3">item-3</option>
-					<option value="item-4">item-4</option>
-					<option value="item-5">item-5</option>
+        <select v-model="city" @change="refresh()" style="float:left;padding:15px;border-right: 1px solid grey !important;border-radius: 0px;" class="mui-btn mui-btn-block">
+					<option value="0">All Cities</option>
+					<option value="1">Vancouver</option>
+					<option value="2">Richmond</option>
+					<option value="3">Burnaby</option>
+					<option value="4">Coquiltlam</option>
+        	<option value="5">Surrey</option>
 				</select>
-        <select style="" class="mui-btn mui-btn-block">
-					<option value="item-1">item-1</option>
-					<option value="item-2">item-2</option>
-					<option value="item-3">item-3</option>
-					<option value="item-4">item-4</option>
-					<option value="item-5">item-5</option>
+        <select v-model="price" @change="refresh()" style="border-left: 1px solid grey !important;border-radius: 0px;padding:15px;" class="mui-btn mui-btn-block">
+					<option value="0">All Prices</option>
+					<option value="1">$10-$15</option>
+					<option value="2">$15-$20</option>
+					<option value="3">$20-$25</option>
+          <option value="4">$25-$30</option>
 				</select>
 				</div>
 			</div>
 			<ul class="mui-table-view">
         <template v-for="da in data">
           <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="'http://foreclean.tk:8000/storage/' + da.avatar">
-              <button type="button" class="mui-btn mui-btn-primary view-btn" @click="view(da)">View</button>
+              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="da.avatar == null ?url():da.avatar ">
+              <router-link :to="{ name: 'CleanerReview', params: { cleaner: da}}" type="button" class="mui-btn mui-btn-primary view-btn">View</router-link>
               <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body">
-                <h4 class='mui-ellipsis' style="text-align:left">{{da.name}}&nbsp;&nbsp;&nbsp;{{da.phone}}&nbsp;</h4>
-                <p class='mui-ellipsis' style="text-align:left">City: {{da.city}}&nbsp; Rate: {{da.rate}}</p>
+                <h4 class='mui-ellipsis' style="text-align:left">{{da.name}}&nbsp;
+                  <template v-for="i in da.rate">
+                      <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
+                  </template>
+                </h4>
+                <p class='mui-ellipsis'><span  style="float:left">{{getCityName(da.city)}}</span>&nbsp; <span style="color:red;margin-right:70px;float:right">Price: ${{da.pay_rate}}/hr</span></p>
               </div>
            
           </div>
         </template>
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
-          <p v-if="!loading">No More Data</p>
+          <p v-if="!loading">No More Cleaner</p>
         </div>
 			</ul>
 		</div>
@@ -76,9 +71,13 @@
 
 <script>
 import axios from "axios";
+import cleanerReview from './CleanerReview.vue'
 var count = 0;
 export default {
   name: "cleaner",
+  components:{
+    cleanerReview
+  },
   data() {
     return {
       busy: false,
@@ -86,13 +85,31 @@ export default {
       page: 0,
       loading: true,
       cleaner: null,
-      modalClass: "mui-modal"
+      modalClass: "mui-modal",
+      city: 0 ,
+      price: 0,
+      cleaner_page: 0,
+      cleaner_reviews: [],
+      cleaner_loading: true,
+      cleaner_busy: false
     };
   },
   mounted() {
+    console.log(this.cleaner_loading);
+    console.log(this.cleaner_busy);
   },
   methods: {
+    refresh: function() {
+       console.log(this.city,this.price);
+       this.data = [];
+       this.page = 0;
+       this.loadMore();
+    },
     view: function(da) {
+      this.cleaner_reviews=[];
+      this.cleaner_loading = true;
+      this.cleaner_busy = false;
+      this.cleaner_page=0;
       this.cleaner = da;
       this.modalClass = "mui-modal mui-active";
     },
@@ -109,7 +126,7 @@ export default {
         axios
           .post(
             "http://foreclean.tk:8000/api/getCleanerList",
-            JSON.stringify({"bedroom":"1","bathroom":"2","additional":"1"})
+            JSON.stringify({"city": this.city,"price": this.price})
           )
           .then(response => {
             console.log(response);
@@ -130,6 +147,39 @@ export default {
             console.log(error.response);
           });
       }, 0);
+    },
+    loadMoreCleaner: function() {
+      this.cleaner_busy = true;
+
+      setTimeout(() => {
+        axios
+          .post(
+            "http://foreclean.tk:8000/api/getReviewForCleaner",
+            JSON.stringify({"cleaner_id": this.cleaner.id,"offset": this.cleaner_page*10})
+          )
+          .then(response => {
+            console.log(response);
+            if (response.data.success == true) {
+              this.cleaner_page++;
+              this.cleaner_reviews = this.cleaner_reviews.concat(response.data.reviews);
+
+              if (response.data.reviews.length < 5) {
+                this.cleaner_busy = true;
+                this.cleaner_loading = false;
+              } else {
+                this.cleaner_busy = false;
+              }
+              console.log(this.cleaner_loading,this.cleaner_busy);
+            } else {
+              mui.toast("数据获取失败");
+              this.cleaner_busy = false;
+            }
+          })
+          .catch(error => {
+            this.cleaner_busy = false;
+            console.log(error.response);
+          });
+      }, 0);
     }
   }
 };
@@ -140,17 +190,23 @@ export default {
 .mui-content {
   padding-top: 0px;
 }
-
+.mui-icon-star-filled {
+  font-size: 14px !important;
+}
 .mui-btn-block {
     display: inline;
     padding: 15px auto;
     width:50%; 
-    text-align-last: center; 
+    text-align-last: center !important; 
+    text-align: center !important; 
     padding: 15px 50px;
     margin-bottom: 0px;
 }
 
 .view-btn {
-  width: auto;
+  width: auto !important;
+}
+.mui-android .mui-modal .mui-bar {
+    position: absolute !important;
 }
 </style>

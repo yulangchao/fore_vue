@@ -27,16 +27,25 @@ export default {
   top: 5px !important;
 }
 .mui-bar-nav{
-  background: #EB482F;
+  background-color: #EB482F !important;
 }
 .mui-title{
-  color:white
+  color:white !important;
 }
 .mui-bar-nav ~ .mui-content {
-    padding-top: 0px;
+    padding-top: 0px !important;
 }
 
 .mui-toast-container{
     top: 1% !important
+}
+
+
+.mui-table-view-cell:after{
+  left:0px !important;
+}
+
+.order_status{
+  border:none !important
 }
 </style>

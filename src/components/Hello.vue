@@ -39,14 +39,14 @@
               <div class="mui-media-body">
                 <h4 class='mui-ellipsis' style="text-align:left">{{da.fix_category_id}}&nbsp;&nbsp;&nbsp;{{da.customer_contact}}&nbsp;</h4>
                 <p class='mui-ellipsis' style="text-align:left">{{da.create_time}}&nbsp;</p>
-                <p class='mui-ellipsis mui-pull-left'>{{da.customer_address.split(',')[0]}}&nbsp;</p>
+                <p class='mui-ellipsis'>{{da.customer_address.split(',')[0]}}&nbsp;</p>
               </div> -->
             </a>
           </li>
         </template>
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
-          <p v-if="!loading">No More Data</p>
+          <p v-if="!loading">No More Order</p>
         </div>
 			</ul>
 		</div>

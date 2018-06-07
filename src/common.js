@@ -9,7 +9,7 @@ let common = function(Vue, options) {
   };
   Vue.prototype.url = function() {
     //全局函数2
-    return "http://foreclean.tk:8000/storage/";
+    return "http://foreclean.tk:8000/storage/cleaners/May2018/HFpSgPcvMpTUf9u5A9J9.jpg";
   };
 
   Vue.prototype.getTimeFromMinutes = function(time) {
@@ -21,6 +21,32 @@ let common = function(Vue, options) {
     }
     return hour + ":" + min;
   };
+  Vue.prototype.getOrderStatus = function(status) {
+    let status_name = "";
+    switch (status) {
+      case 1:
+        status_name = "Pending";
+        break;
+      case 2:
+        status_name = "Unpaid";
+        break;
+      case 3:
+        status_name = "Booked";
+        break;
+      case 4:
+        status_name = "Changed Time & Wait for Response";
+        break;
+      case 5:
+        status_name = "In Service";
+        break;
+      case 6:
+        status_name = "Finished";
+        break;
+      case 7:
+        status_name = "Canceled";
+    }
+    return status_name;
+  };
   Vue.prototype.getCityName = function(city_id) {
     let city = "";
     switch (city_id) {
@@ -31,13 +57,13 @@ let common = function(Vue, options) {
         city = "Richmond";
         break;
       case 3:
-        city = "Tuesday";
+        city = "Burnaby";
         break;
       case 4:
-        city = "Wednesday";
+        city = "Coquiltlam";
         break;
       case 5:
-        city = "Thursday";
+        city = "Surrey";
         break;
       case 6:
         city = "Friday";
@@ -64,7 +90,7 @@ let common = function(Vue, options) {
   };
   Vue.prototype.getAdditionalName = function(type_id) {
     let objectname = "";
-    switch (type_id) {
+    switch (type_id * 1) {
       case 1:
         objectname = "Inside fridge";
         break;
@@ -79,6 +105,21 @@ let common = function(Vue, options) {
         break;
       case 5:
         objectname = "Laundry wash & dry";
+        break;
+    }
+    return objectname;
+  };
+  Vue.prototype.getOrderType = function(type_id) {
+    let objectname = "";
+    switch (type_id) {
+      case 1:
+        objectname = "AIRBNB";
+        break;
+      case 2:
+        objectname = "HOME";
+        break;
+      case 3:
+        objectname = "MOVING";
         break;
     }
     return objectname;

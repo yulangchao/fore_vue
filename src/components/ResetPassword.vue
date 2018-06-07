@@ -2,7 +2,7 @@
   <div class="sign-up">
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">Register</h1>
+			<h1 class="mui-title">Reset Password</h1>
 		</header>
 		<div id="modal" v-if="loading" class="mui-modal mui-active" style="opacity: 0.6;">
           <span class="mui-spinner" style="    top: 50%;
@@ -13,7 +13,7 @@
 		</div>
 		<div class="mui-content">
 			<div class="mui-content-padded" style="margin: 5px;">
-				<h3 style="margin:60px 0px 20px 0px">Register</h3>
+				<h3 style="margin:60px"></h3>
 				<div class="mui-input-row">
 					<input type="text" class="mui-input-clear"  v-model="email" placeholder="Email">
 				</div>
@@ -27,9 +27,8 @@
 					<input type="password" class="mui-input-password" v-model="repassword" placeholder="Comfirm Password">
 				</div>
 					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary mui-btn-block" @click="signUp">Register</button>&nbsp;&nbsp;
-						<router-link to="/login" type="button" class="mui-btn mui-btn-danger mui-btn-block">Return</router-link>
-					</div>
+						<button type="button" class="mui-btn mui-btn-primary mui-btn-block" @click="signUp">Change</button>&nbsp;&nbsp;
+        </div>
 			</div>
 		</div>
   </div>
@@ -39,14 +38,15 @@
 import firebase from "firebase";
 import axios from "axios";
 export default {
-  name: "signUp",
+  name: "userSetting",
   data: function() {
     return {
       email: "",
       password: "",
       repassword: "",
       phone: "",
-      loading:false
+      loading:false,
+      user: null
     };
   },
   watch: {

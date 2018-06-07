@@ -23,35 +23,47 @@
 			</router-link>
 		</nav>
 		<div class="mui-content">
-      <div id="tabbar-with-map" class="">
+			<ul class="mui-table-view mui-table-view-chevron">
+				<li class="mui-table-view-cell mui-media">
+					<router-link :to="{ name: 'UserSetting', params: { user: user}}"  class="mui-navigate-right">
+						<img v-if="user" style="width:42px;height:42px;border-radius:100%" class="mui-media-object mui-pull-left head-img" id="head-img" :src="user.avatar==null? url() :  user.avatar">
+						<div v-if="user" class="mui-media-body">
+							{{user.name}}
+							<p class='mui-ellipsis'>Phone:{{user.phone}}</p>
+						</div>
+					</router-link>
+				</li>
+			</ul>
+      <div id="tabbar-with-map" class=""  style="margin-top: 25px;">
+				
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
 						<a class="mui-navigate-right">
-							新消息通知
+							My Reviews
 						</a>
 					</li>
 					<li class="mui-table-view-cell">
 						<a class="mui-navigate-right">
-							隐私
+							Coupons
 						</a>
 					</li>
 					<li class="mui-table-view-cell">
 						<a class="mui-navigate-right">
-							通用
+							Referal
 						</a>
 					</li>
 				</ul>
 				<ul class="mui-table-view" style="margin-top: 25px;">
 					<li class="mui-table-view-cell">
 						<a class="mui-navigate-right">
-							关于mui
+							About Wii
 						</a>
 					</li>
 				</ul>
 				<ul class="mui-table-view" style="margin-top: 25px;">
 					<li class="mui-table-view-cell">
 						<a style="text-align: center;color: #FF3B30;"  href="#" @click="logout">
-							退出登录
+							Log Out
 						</a>
 					</li>
 				</ul>
@@ -72,14 +84,19 @@ export default {
       busy: false,
       data: [],
       page: 0,
-      loading: true
+			loading: true,
+			user: null
     };
   },
-  mounted() {
+  created() {
+		this.user = JSON.parse(localStorage.getItem('user'));
   },
   methods: {
     logout: function() {
       firebase.auth().signOut().then(() => {
+				mui.toast("Logging Out Successfully!");
+				localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
         this.$router.replace('login')
       })
     },

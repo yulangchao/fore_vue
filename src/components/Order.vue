@@ -35,19 +35,28 @@
         <template v-for="da in data">
           <li class="mui-table-view-cell mui-media">
             <a href="javascript:;">
-
-              <h5 class="mui-pull-right">Price: ${{da.price}}</h5>
-              <div class="mui-media-body">
-                <h4 class='mui-ellipsis' style="text-align:left">{{da.order_type}}&nbsp;&nbsp;&nbsp;{{da.phone}}&nbsp;</h4>
-                <p class='mui-ellipsis' style="text-align:left">{{da.time}}&nbsp;</p>
-                <p class='mui-ellipsis mui-pull-left'>{{da.address}}&nbsp;</p>
-              </div>
+              <router-link :to="{ name: 'Payment', params: { order: da}}"  v-if="da.order_status==2" class="mui-btn mui-btn-primary" style="padding: 3px 10px;top: 95px;right: 80px;">
+                Pay
+              </router-link>
+              <button class="mui-btn mui-btn-danger" style="padding: 3px 10px;top: 95px;right: 10px;" @click="cancelOrder(da)">
+                Cancel
+              </button>
+              <h5 class="mui-pull-right">${{da.price}}</h5>
+              <router-link :to="{ name: 'OrderDetail', params: { order: da}}"  class="mui-media-body">
+                <h4 class='mui-ellipsis' style="text-align:left;margin:0px;padding:5px 0px;">{{getOrderType(da.order_type)}}&nbsp;&nbsp;
+                  <button class="order_status" :style="da.order_status== 1 ?'background:#64d573':'background:#ea5a12'">{{da.order_status== 1 ?"Pending":"Unpaid"}}</button>
+                  <button v-if="da.order_status== 2" class="order_status" style="background:#64d573">Arranged</button>
+                  <button v-if="da.cleaner_id== 6" class="order_status" style="background:gold">VIP</button>
+                </h4>
+                <p class='mui-ellipsis' style="text-align:left"><i class="fas fa-phone"></i>:{{da.phone}}  <span style="color:red"><i class="fas fa-clock"></i>:{{da.time}}</span></p>
+                <p class='mui-ellipsis address'>{{da.address.substring(0,60)}}&nbsp;</p>
+              </router-link>
             </a>
           </li>
         </template>
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
-          <p v-if="!loading">No More Data</p>
+          <p v-if="!loading">No More Order</p>
         </div>
 			</ul>
 		</div>
@@ -68,21 +77,61 @@ export default {
       loading: true
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
+    cancelOrder: function(da) {
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token")
+        }
+      };
+      let btnArray = ["否", "是"];
+      mui.prompt("确认取消？", "取消原因", "取消订单", btnArray, e => {
+        if (e.index == 1) {
+          axios
+            .post(
+              "http://foreclean.tk:8000/api/cancelOrder",
+              JSON.stringify({
+                order_id: da.id,
+                cancel_reason: e.value
+              }),
+              config
+            )
+            .then(response => {
+              console.log(response);
+              if (response.data.success == true) {
+                mui.toast("Canceld the Order Successfully.");
+                this.$router.push('/order/finish');
+              } else {
+                mui.toast("修改时间失败");
+              }
+            })
+            .catch(error => {
+              mui.toast("修改时间失败");
+              console.log(error.response);
+            });
+        }
+      });
+    },
     redirect: function() {
       this.$router.replace("hello");
     },
     loadMore: function() {
       this.busy = true;
-
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token")
+        }
+      };
       setTimeout(() => {
         axios
           .post(
             "http://foreclean.tk:8000/api/getOrdererList",
             JSON.stringify({
-            })
+              status: [1, 2],
+              offset: this.page * 10
+            }),
+            config
           )
           .then(response => {
             console.log(response);
@@ -100,6 +149,7 @@ export default {
             }
           })
           .catch(error => {
+            mui.toast("数据获取失败");
             console.log(error.response);
           });
       }, 0);
@@ -112,5 +162,18 @@ export default {
 <style scoped>
 .mui-content {
   padding-top: 0px;
+}
+
+.order_status {
+  color: white;
+  padding: 2px 7px;
+  border-radius: 7px;
+  height: 24px;
+  margin-top: -5px;
+}
+.address {
+  white-space: pre-line;
+  text-align: left;
+  height: 42px;
 }
 </style>

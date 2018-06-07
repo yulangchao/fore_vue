@@ -96,8 +96,8 @@ export default {
   data: function() {
     return {
       title: "",
-      name: "rik",
-      phone: "6047195215",
+      name: "",
+      phone: "",
       time: "",
       city: "",
       bedroom: 1,
@@ -105,8 +105,15 @@ export default {
       address: "",
       additional: [],
       position: null,
-      others: []
+      others: [],
+      user: null
     };
+  },
+  created() {
+    this.user = JSON.parse(localStorage.getItem('user'));
+    this.name = this.user.name;
+    this.phone = this.user.phone
+    this.time = new Date().toISOString().substring(0,16);
   },
   mounted() {
     
@@ -121,7 +128,7 @@ export default {
       let order = this.$route.params.order
       this.phone = order.phone;
       this.name = order.name;
-      this.time = order.time;
+      this.time = order.time.substring(0,16);
       this.additional = order.additional;
       this.bathroom = order.bathroom;
       this.bedroom = order.bedroom;
@@ -147,15 +154,17 @@ export default {
     if (this.$route.params.order_type == 1) {
       this.title = "AIRBNB CLEANING";
     } else if (this.$route.params.order_type == 2) {
-      this.title = "CARPET CLEANING";
+      this.title = "HOME CLEANING";
     } else {
-      this.title = "HOUSE CLEANING";
+      this.title = "MOVING CLEANING";
     }
     
 
   },
   methods: {
     createOrder: function() {
+
+
 
       let details = {
         order_type: this.$route.params.order_type,
@@ -172,12 +181,24 @@ export default {
         others: this.others
       };
 
+      let d = new Date(Date.parse(this.time + "Z"));
+      let hr = new Date(
+        Date.parse(this.time + "Z") + d.getTimezoneOffset() * 60000
+      ).getHours();
+      if (hr+details.hours >23 || hr < 8){
+
+        mui.toast("Please Enter Correct Time！");
+        return;
+      }
+
+
       if (!this.name) {
         mui.toast("Name is needed!");
         return;
-      }
-      if (!this.phone) {
-        mui.toast("Phone is needed!");
+      } 
+
+      if (this.phone.length != 10) {
+        mui.toast("Phone Number is not Correct!");
         return;
       }
       if (!this.time) {

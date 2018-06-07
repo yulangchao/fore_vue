@@ -12,8 +12,48 @@
 					<a class="mui-icon mui-icon-close mui-pull-right" @click="closeModal"></a>
 					<h1 class="mui-title">{{cleaner.name}}</h1>
 				</header>
-				<div class="mui-content" style="height: 100%;">
-					<p class="mui-content-padded">The contents of my modal go here. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut.</p>
+				<div class="mui-content" style="height: 100%;margin-top:44px !important;overflow: scroll;">
+            <ul v-if="cleaner" class="mui-table-view mui-table-view-chevron" style="margin-top:0px">
+              <li class="mui-table-view-cell mui-media">
+                <a class="" href="#account">
+                  <img class="mui-media-object mui-pull-left head-img" id="head-img" :src="cleaner.avatar == null ?url() :  cleaner.avatar">
+                  <div class="mui-media-body" style="text-align:left">
+                    <h4>{{cleaner.name}}              
+                      <template v-for="i in cleaner.rate">
+                            <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
+                      </template>
+                      
+                    </h4>
+
+                    <p class='mui-ellipsis'>{{getCityName(cleaner.city)}}
+                      <span style="position:absolute;right:10px;top:15px">Pay Rate: ${{cleaner.pay_rate}}/hr</span>
+                    </p>
+                  </div>
+                </a>
+              </li>
+            </ul>
+            <h5>Recent 10 Comments</h5>
+            <ul class="mui-table-view">
+              <template v-for="review in cleaner_review">
+                <div class="mui-table-view-cell mui-input-row mui-media mui-left">
+                    <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="review.avatar==null?url() : review.avatar">
+                    <h5 class="mui-pull-right"></h5>
+                    <div class="mui-media-body">
+                      <p class="mui-pull-right">{{review.created_at.split(" ")[0]}}</p>
+                      <h4 class='mui-ellipsis' style="text-align:left">{{review.name}}&nbsp;
+                        
+                      </h4>
+                      <p style="text-align: left">
+                      <template v-for="i in review.rate">
+                            <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
+                      </template>
+                      </p>
+                      <p class='mui-ellipsis' style="text-align: left;white-space: pre-line;word-wrap: break-word;">{{review.comments}}</p>
+                    </div>
+                
+                </div>
+              </template>
+            </ul>
 				</div>
 		</div>
 		<div class="mui-content">
@@ -45,7 +85,7 @@
               <img class="mui-media-object mui-pull-left" style="border-radius: 2px" src="http://foreclean.tk:8000/storage/files/May2018/9OFHyqBtWwZqbebh4e9V.png">
               <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button>
               <h5 class="mui-pull-right"></h5>
-              <div class="mui-media-body">
+              <div class="mui-media-body" @click="view(premium_cleaner)">
                 <h4 class='mui-ellipsis' style="text-align:left">Fore&nbsp;
                   <template v-for="i in 5">
                       <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
@@ -64,7 +104,7 @@
 
           <div class="mui-table-view-cell mui-input-row mui-checkbox mui-media mui-left">
               <input style="left: 0px; width: 48px;height: 72px;padding: 20px 10px;top: 0px;" :id="'check' +da.id" v-model="cleaners" :value="da.id" type="checkbox" @change="selected($event,da.id);" :disabled="cleaners.indexOf(da.id)<0 && cleaners.length >=3">
-              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="url() + da.avatar">
+              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="da.avatar==null?url() : da.avatar">
               <button type="button" class="mui-btn mui-btn-primary view-btn" @click="view(da)">View</button>
               <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body">
@@ -74,7 +114,7 @@
                   </template>
                 </h4>
                 <p class='mui-ellipsis distance'>15km</p>
-                <p class='mui-ellipsis'><span  style="float:left">{{getCityName(da.city)}}</span>&nbsp; <span style="color:red;margin-right:50px;float:right">Price: 15/hr</span></p>
+                <p class='mui-ellipsis'><span  style="float:left">{{getCityName(da.city)}}</span>&nbsp; <span style="color:red;margin-right:50px;float:right">Price: {{da.pay_rate}}/hr</span></p>
               </div>
            
           </div>
@@ -103,7 +143,9 @@ export default {
       order: null,
       cleaners: [],
       cleaner: null,
-      modalClass: "mui-modal"
+      modalClass: "mui-modal",
+      cleaner_review: [],
+      premium_cleaner: {"id": 6, "name": "Fore", "sex": 1, "city": 1, "rate": 5, "avatar": "files/May2018/9OFHyqBtWwZqbebh4e9V.png", "pay_rate": 30}
     };
   },
   created() {
@@ -115,18 +157,17 @@ export default {
   },
   mounted() {
     //重置后退键
-    let backButton = e => {
-      e.preventDefault();
-      if (this.order) {
-        this.$router.push({
-          name: "ServiceForm",
-          params: { order_type: this.order.order_type, order: this.order }
-        });
-
-        window.removeEventListener("popstate", backButton);
-      }
-    };
-    window.addEventListener("popstate", backButton);
+    // let backButton = e => {
+    //   e.preventDefault();
+    //   if (this.order) {
+    //     this.$router.push({
+    //       name: "ServiceForm",
+    //       params: { order_type: this.order.order_type, order: this.order }
+    //     });
+    //     window.removeEventListener("popstate", backButton);
+    //   }
+    // };
+    // window.addEventListener("popstate", backButton);
   },
   beforeDestroy() {
     document.removeEventListener("backbutton", () => {
@@ -135,22 +176,83 @@ export default {
   },
   methods: {
     dialog: function() {
-				var btnArray = ['No', 'Confirm'];
-				mui.confirm('You selected the ', 'Hello MUI', btnArray, (e) => {
-					if (e.index == 1) {
-						mui.toast("done");
-					} else {
-						mui.toast("not done");
-					}
-				})
+      var btnArray = ["No", "Confirm"];
+      mui.confirm("You selected the ", "Fore", btnArray, e => {
+        if (e.index == 1) {
+          let d = new Date(Date.parse(this.order.time + "Z"));
+          let start_time = this.order.time.split("T")[1].substr(0, 5);
+          let hr = new Date(
+            Date.parse(this.order.time + "Z") + d.getTimezoneOffset() * 60000
+          ).getHours();
+          let min = new Date(
+            Date.parse(this.order.time + "Z") + d.getTimezoneOffset() * 60000
+          ).getMinutes();
+          let total_min = hr * 60 + min * 1 + this.order.hours * 60;
+
+          let end_time = this.getTimeFromMinutes(total_min);
+          let config = {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("access_token")
+            }
+          };
+          axios
+            .post(
+              "http://foreclean.tk:8000/api/createOrder",
+              JSON.stringify({
+                order_type: this.order.order_type,
+                name: this.order.name,
+                phone: this.order.phone,
+                address: this.order.address,
+                bedroom: this.order.bedroom,
+                bathroom: this.order.bathroom,
+                additional: this.order.additional,
+                hours: this.order.hours,
+                time: this.order.time.replace("T", " "),
+                start_time: start_time,
+                end_time: end_time,
+                selected_cleaners: [-1],
+                city: this.order.city
+              }),
+              config
+            )
+            .then(response => {
+              console.log(response);
+              if (response.data.success == true) {
+                mui.toast("订单创建成果,等待Cleaners回复");
+                this.$router.push("/order");
+              } else {
+                mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
+              }
+            })
+            .catch(error => {
+              mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
+              console.log(error.response);
+            });
+        } else {
+        }
+      });
     },
-    createOrder: function(){
-      let start_time = this.order.time.split("T")[1];
-      let hr = new Date(this.order.time.replace("T", " ")).getHours();
-      let min = new Date(this.order.time.replace("T", " ")).getMinutes();
-      let total_min = hr * 60 + min*1 + this.order.hours * 60;
-      console.log(total_min);
+    createOrder: function() {
+      if (this.cleaners.length == 0) {
+        mui.toast("Please select at least 1 cleaner!");
+        return;
+      }
+      let d = new Date(Date.parse(this.order.time + "Z"));
+      let start_time = this.order.time.split("T")[1].substr(0, 5);
+      let hr = new Date(
+        Date.parse(this.order.time + "Z") + d.getTimezoneOffset() * 60000
+      ).getHours();
+      let min = new Date(
+        Date.parse(this.order.time + "Z") + d.getTimezoneOffset() * 60000
+      ).getMinutes();
+      let total_min = hr * 60 + min * 1 + this.order.hours * 60;
+
       let end_time = this.getTimeFromMinutes(total_min);
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token")
+        }
+      };
       setTimeout(() => {
         axios
           .post(
@@ -167,35 +269,36 @@ export default {
               time: this.order.time.replace("T", " "),
               start_time: start_time,
               end_time: end_time,
-              selected_cleaners: this.cleaners
-            })
+              selected_cleaners: this.cleaners,
+              city: this.order.city
+            }),
+            config
           )
           .then(response => {
             console.log(response);
             if (response.data.success == true) {
-              this.page++;
-              this.data = this.data.concat(response.data.cleaners);
-              if (response.data.cleaners.length < 10) {
-                this.busy = true;
-                this.loading = false;
-              } else {
-                this.busy = false;
-              }
+              mui.toast("订单创建成果,等待Cleaners回复");
+              this.$router.push("/order");
             } else {
-              mui.toast("数据获取失败");
+              mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
             }
           })
           .catch(error => {
+            mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
             console.log(error.response);
           });
       }, 0);
     },
     view: function(da) {
       this.cleaner = da;
-      document.getElementById("check" + da.id).click();
+      this.loadReview();
+      if(da.id !=6){
+       document.getElementById("check" + da.id).click();
+      }
       this.modalClass = "mui-modal mui-active";
     },
     closeModal: function(da) {
+      this.cleaner_review = [];
       this.modalClass = "mui-modal";
     },
     selected: function(e, id) {
@@ -206,27 +309,56 @@ export default {
         this.cleaners.splice(this.cleaners.indexOf(id), 1);
       }
     },
-    redirect: function() {
-      this.$router.replace("hello");
+    loadReview: function() {
+        console.log(this.cleaner.id);
+        axios
+          .post(
+            "http://foreclean.tk:8000/api/getReviewForCleaner",
+            JSON.stringify({
+              cleaner_id: this.cleaner.id,
+              offset: 0
+            })
+          )
+          .then(response => {
+            console.log(response);
+            if (response.data.success == true) {
+              this.cleaner_review = this.cleaner_review.concat(response.data.reviews);
+            } else {
+              mui.toast("数据获取失败");
+            }
+          })
+          .catch(error => {
+            console.log(error.response);
+          });
+
     },
     loadMore: function() {
       this.busy = true;
+      let d = new Date(Date.parse(this.order.time + "Z"));
+
+      let data = {
+        hours: this.order.hours,
+        time: this.order.time.replace("T", " "),
+        day: new Date(
+          Date.parse(this.order.time + "Z") + d.getTimezoneOffset() * 60000
+        ).getDay(),
+        hr: new Date(
+          Date.parse(this.order.time + "Z") + d.getTimezoneOffset() * 60000
+        ).getHours(),
+        min: new Date(
+          Date.parse(this.order.time + "Z") + d.getTimezoneOffset() * 60000
+        ).getMinutes(),
+        offset: this.page * 10,
+        position: this.order.position
+      };
 
       setTimeout(() => {
         axios
           .post(
             "http://foreclean.tk:8000/api/getCleanerListByOrder",
-            JSON.stringify({
-              hours: this.order.hours,
-              time: this.order.time.replace("T", " "),
-              day: new Date(this.order.time.replace("T", " ")).getDay(),
-              hr: new Date(this.order.time.replace("T", " ")).getHours(),
-              min: new Date(this.order.time.replace("T", " ")).getMinutes(),
-              offset: this.page * 10
-            })
+            JSON.stringify(data)
           )
           .then(response => {
-            console.log(response);
             if (response.data.success == true) {
               this.page++;
               this.data = this.data.concat(response.data.cleaners);
@@ -252,7 +384,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .mui-table-view-cell.mui-checkbox.mui-left {
-    padding-left: 48px;
+  padding-left: 48px;
 }
 .mui-content {
   padding-top: 0px;
@@ -269,13 +401,13 @@ export default {
   font-size: 12px !important;
 }
 .mui-table-view-condensed button {
-  padding: 6px;
+  padding: 6px !important;
 }
 
-.view-btn {
-  width: auto;
-  top: 50px;
-  padding: 6px;
+.mui-table-view-cell > .mui-btn {
+  width: auto !important;
+  top: 50px !important;
+  padding: 6px !important;
 }
 
 .weui-btn {
@@ -292,6 +424,10 @@ export default {
 }
 
 .mui-table-view-cell:after {
-    left: 0px;
+  left: 0px;
+}
+
+.mui-bar-nav ~ .mui-content {
+  padding-bottom: 60px !important;
 }
 </style>
