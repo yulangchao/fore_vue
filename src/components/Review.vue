@@ -2,7 +2,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
       <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1  style="color:white" v-if="cleaner" class="mui-title">{{cleaner.name}}'s Review</h1>
+			<h1  style="color:white;text-transform: capitalize;" v-if="cleaner" class="mui-title">{{cleaner.name}}'s Review</h1>
 		</header>
 		<!-- <nav class="mui-bar mui-bar-tab">
 			<router-link to="/service" class="mui-tab-item">
@@ -52,11 +52,12 @@
 		            </div>
 		        </li>
 		    </ul>
+        <h5>Selected Cleaner</h5>
 			<ul v-if="cleaner" class="mui-table-view mui-table-view-chevron">
 				<li class="mui-table-view-cell mui-media">
 					<a class="">
-						<img v-if="user" class="mui-media-object mui-pull-left head-img" id="head-img" :src="cleaner.avatar==null? url() :  user.avatar">
-						<div v-if="user" class="mui-media-body">
+						<img v-if="user" class="mui-media-object mui-pull-left head-img" style="border-radius:100%" id="head-img" :src="cleaner.avatar==null? url() :  user.avatar">
+						<div v-if="user" class="mui-media-body" style="text-transform: capitalize;">
 							{{cleaner.name}}
 						</div>
             <template v-for="i in cleaner.rate">
@@ -65,6 +66,14 @@
 					</a>
 				</li>
 			</ul>
+
+			<div class="mui-content-padded">
+				<div class="mui-inline">Comments:</div>
+
+			</div>
+			<div class="row mui-input-row">
+				<textarea id='question' v-model="comments" class="mui-input-clear question" placeholder="Please Give a Comment"></textarea>
+			</div>
 			<div class="mui-content-padded" style="margin-left: 6px;">
 				<div class="mui-inline">Rate:</div>
 				<div class="icons mui-inline" style="margin-left: 6px;">
@@ -75,15 +84,7 @@
 					<i data-index="5" class="mui-icon mui-icon-star"></i>
 				</div>
 			</div>
-			<div class="mui-content-padded">
-				<div class="mui-inline">Comments</div>
-
-			</div>
-			<div class="row mui-input-row">
-				<textarea id='question' v-model="comments" class="mui-input-clear question" placeholder="Please Give a Comment"></textarea>
-			</div>
-
-
+      
 			<div class="weui-gallery" v-if="selected_image" style="display:block">
 				<span class="weui-gallery__img"  @click="selected_image=null" :style="'background-image: url('+selected_image+')'"></span>
 				<div class="weui-gallery__opr">

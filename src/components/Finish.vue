@@ -38,7 +38,7 @@
               <router-link :to="{ name: 'Review', params: { order: da}}" class="mui-btn mui-btn-primary" v-if="da.order_status== 6 && da.review_status == null" style="padding: 3px 10px;top: 95px;right: 10px;">
                 Review
               </router-link>
-              <h5 class="mui-pull-right">${{da.price}}</h5>
+              <h5 class="mui-pull-right">${{da.price+da.agent_fee}}</h5>
               <router-link :to="{ name: 'OrderDetail', params: { order: da}}" class="mui-media-body">
                 <h4 class='mui-ellipsis' style="text-align:left;margin:0px;padding:5px 0px;">{{getOrderType(da.order_type)}}&nbsp;&nbsp;
                   <button class="order_status" :style="da.order_status== 6 ?'background:#64d573':'background:#ea5a12'">{{da.order_status== 6 ?"Finished":"Canceled"}}</button>

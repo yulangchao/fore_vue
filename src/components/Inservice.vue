@@ -35,7 +35,7 @@
         <template v-for="da in data">
           <li class="mui-table-view-cell mui-media">
             <a href="javascript:;">
-              <h5 class="mui-pull-right">${{da.price}}</h5>
+              <h5 class="mui-pull-right">${{da.price+da.agent_fee}}</h5>
               <router-link :to="{ name: 'OrderDetail', params: { order: da}}" class="mui-media-body">
                 <h4 class='mui-ellipsis' style="text-align:left;margin:0px;padding:5px 0px;">{{getOrderType(da.order_type)}}&nbsp;&nbsp;
                   <button class="order_status" style="background:#64d573">In Service</button>

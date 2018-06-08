@@ -75,7 +75,7 @@
       <h5 class="mui-text-left">*Payment Method</h5>
 			<card class='stripe-card'
 				:class='{ complete }'
-				stripe='pk_test_zvxO3V9yapMgUkV6TehE1nLW'
+				stripe='pk_test_OZIIfUkb4dEVo98bneuTa2pZ'
 				:options='stripeOptions'
 				@change='complete = $event.complete'
 			/>

@@ -30,7 +30,7 @@
 									<img :src="image" @click="showImage(image)" :style="'width: 79px;height: 79px;position: absolute; left: 0; right: 0; margin: auto;border-radius:100%;'"></li>
 								</template>
 							</ul>		
-							<div :style="'background-size: 79px;position: absolute; left: 0; right: 0; margin: auto;border-radius:100%;background-image:url('+(user.avatar == null ? url():user.avatar) +')'" class="weui-uploader__input-box" v-if="images.length<1">
+							<div :style="'background-size: 100% 100%;position: absolute; left: 0; right: 0; margin: auto;border-radius:100%;background-image:url('+(user.avatar == null ? url():user.avatar) +')'" class="weui-uploader__input-box" v-if="images.length<1">
 									<input id="uploaderInput" name="attach" @change="filesChange($event)" class="weui-uploader__input" type="file" accept="image/*" />
 							</div>
 					</div>
