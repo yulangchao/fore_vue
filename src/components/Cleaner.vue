@@ -25,7 +25,7 @@
 		<div class="mui-content">
       <div>
 				<div class="">
-        <select v-model="city" @change="refresh()" style="float:left;padding:15px;border-right: 1px solid grey !important;border-radius: 0px;" class="mui-btn mui-btn-block">
+        <select v-model="city" @change="refresh()" style="float:left;padding:10px;border-right: 1px solid grey !important;border-radius: 0px;" class="mui-btn mui-btn-block">
 					<option value="0">All Cities</option>
 					<option value="1">Vancouver</option>
 					<option value="2">Richmond</option>
@@ -33,7 +33,7 @@
 					<option value="4">Coquiltlam</option>
         	<option value="5">Surrey</option>
 				</select>
-        <select v-model="price" @change="refresh()" style="border-left: 1px solid grey !important;border-radius: 0px;padding:15px;" class="mui-btn mui-btn-block">
+        <select v-model="price" @change="refresh()" style="border-left: 1px solid grey !important;border-radius: 0px;padding:10px;" class="mui-btn mui-btn-block">
 					<option value="0">All Prices</option>
 					<option value="1">$10-$15</option>
 					<option value="2">$15-$20</option>
@@ -45,7 +45,7 @@
 			<ul class="mui-table-view">
         <template v-for="da in data">
           <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="da.avatar == null ?url():da.avatar ">
+              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" v-lazy="da.avatar == null ?url():da.avatar ">
               <router-link :to="{ name: 'CleanerReview', params: { cleaner: da}}" type="button" class="mui-btn mui-btn-primary view-btn">View</router-link>
               <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body">

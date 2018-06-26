@@ -31,6 +31,9 @@
 					<router-link to="/order/finish" class="mui-control-item">Finished</router-link>
 				</div>
 		</div>
+    <mt-loadmore :top-method="loadTop" ref="loadmore" @top-status-change="handleTopChange">
+
+
 		<ul class="mui-table-view">
         <template v-for="da in data">
           <li class="mui-table-view-cell mui-media">
@@ -59,6 +62,12 @@
           <p v-if="!loading">No More Order</p>
         </div>
 			</ul>
+        <div slot="top" class="mint-loadmore-top">
+    <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
+    <span v-show="topStatus === 'loading'" class="mint-loadmore-text">Refresh...</span>
+  </div>
+      </mt-loadmore>
+      
 		</div>
 
 	</body>
@@ -71,6 +80,7 @@ export default {
   name: "inService",
   data() {
     return {
+      topStatus: "",
       busy: false,
       data: [],
       page: 0,
@@ -79,6 +89,18 @@ export default {
   },
   mounted() {},
   methods: {
+    handleTopChange(status) {
+      this.topStatus = status;
+    },
+    loadTop(id) {
+      console.log(123);
+      this.data = [];
+      this.loading = true;
+      this.busy = false;
+      this.page = 0;
+      this.loadMore();
+      this.$refs.loadmore.onTopLoaded(id);
+    },
     cancelOrder: function(da) {
       let config = {
         headers: {
@@ -101,7 +123,7 @@ export default {
               console.log(response);
               if (response.data.success == true) {
                 mui.toast("Canceld the Order Successfully.");
-                this.$router.push('/order/finish');
+                this.$router.push("/order/finish");
               } else {
                 mui.toast("修改时间失败");
               }

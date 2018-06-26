@@ -4,12 +4,22 @@
       <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 style="color:white" class="mui-title">{{cleaner.name}}'s Comments</h1>
 		</header>
-
+    <div class="weui-gallery" v-if="selected_image" style="display:block">
+      <span class="weui-gallery__img"  @click="closeImage()" :style="'background-image: url('+selected_image+')'"></span>
+      <div class="weui-gallery__opr">
+						<a href="javascript:" class="weui-gallery__del"   @click="PrevImage()" style="width:50%;float:left">
+              <i class="fas fa-chevron-circle-left"></i>
+						</a>
+            <a href="javascript:" class="weui-gallery__del" @click="NextImage()" style="width:50%;float:left">
+              <i style="fonts"class="fas fa-chevron-circle-right" ></i>
+						</a>
+			</div>
+    </div>
 		<div class="mui-content" style="margin-bottom:50px;">
       <ul v-if="cleaner" class="mui-table-view mui-table-view-chevron" style="margin-top:0px">
         <li class="mui-table-view-cell mui-media">
           <a class="" href="#account">
-            <img class="mui-media-object mui-pull-left head-img" id="head-img" :src="cleaner.avatar == null ?url() : cleaner.avatar ">
+            <img class="mui-media-object mui-pull-left head-img" id="head-img" v-lazy="cleaner.avatar == null ?url() : cleaner.avatar ">
             <div class="mui-media-body" style="text-align:left">
               <h4>{{cleaner.name}}              
                 <template v-for="i in cleaner.rate">
@@ -30,7 +40,7 @@
 			<ul class="mui-table-view">
         <template v-for="review in data">
           <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="review.avatar == null ? url() :review.avatar ">
+              <img class="mui-media-object mui-pull-left" style="border-radius: 100%;width:79px" v-lazy="review.avatar == null ? url() :review.avatar ">
               <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body">
                 <p class="mui-pull-right">{{review.created_at.split(" ")[0]}}</p>
@@ -44,20 +54,19 @@
                 </p>
                 <p class='mui-ellipsis' style="text-align: left;white-space: pre-line;word-wrap: break-word;">{{review.comments}}</p>
               </div>
-              <div class="weui-gallery" v-if="selected_image" style="display:block">
-                <span class="weui-gallery__img"  @click="selected_image=null" :style="'background-image: url('+selected_image+')'"></span>
-              </div>
+
           		<div v-if="JSON.parse(review.images).length>0" class="weui-uploader" style="padding: 10px;">
                 <div class="weui-uploader__bd">
                     <ul class="weui-uploader__files" id="uploaderFiles">
-                      <template v-for="image of JSON.parse(review.images)">
-                        <li  @click="showImage(image)" class="weui-uploader__file" :style="'background-image:url('+image+')'"></li>
+                      <template v-for="image of JSON.parse(review.images)"> 
+                        <li  @click="showImage(image,JSON.parse(review.images))" class="weui-uploader__file" :style="'background-image:url('+image+')'"></li>
                       </template>
                     </ul>
                 </div>
             </div>
           </div>
         </template>
+        
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
           <p v-if="!loading">No More Reviews</p>
@@ -80,7 +89,8 @@ export default {
       page: 0,
       loading: true,
       cleaner: null,
-      selected_image: null
+      selected_image: null,
+      ga_images:[]
     };
   },
   created() {
@@ -91,8 +101,27 @@ export default {
 
   },
   methods: {
-    showImage: function(selected_image) {
+    NextImage: function() {
+      let index = this.ga_images.indexOf(this.selected_image);
+      if (index < this.ga_images.length-1){
+        this.selected_image = this.ga_images[index+1];
+      }
+    },
+    PrevImage: function() {
+      let index = this.ga_images.indexOf(this.selected_image);
+      if (index > 0 ){
+        this.selected_image = this.ga_images[index-1];
+      }
+    },
+    showImage: function(selected_image,ga_images) {
       this.selected_image = selected_image;
+      this.ga_images = ga_images;
+      document.querySelector('meta[name="viewport"]').setAttribute("content", "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=2");
+    },
+    closeImage: function() {
+      this.selected_image = null;
+      this.ga_images = [];
+      document.querySelector('meta[name="viewport"]').setAttribute("content", "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no");
     },
     loadMore: function() {
       this.busy = true;

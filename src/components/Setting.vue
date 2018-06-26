@@ -2,7 +2,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			
-			<h1  style="color:white" class="mui-title">设置</h1>
+			<h1  style="color:white" class="mui-title">Settings</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
 			<router-link to="/service" class="mui-tab-item">
@@ -23,7 +23,7 @@
 			</router-link>
 		</nav>
 		<div class="mui-content">
-			<ul class="mui-table-view mui-table-view-chevron">
+			<ul class="mui-table-view mui-table-view-chevron" style="margin-top:60px;">
 				<li class="mui-table-view-cell mui-media">
 					<router-link :to="{ name: 'UserSetting', params: { user: user}}"  class="mui-navigate-right">
 						<img v-if="user" style="width:42px;height:42px;border-radius:100%" class="mui-media-object mui-pull-left head-img" id="head-img" :src="user.avatar==null? url() :  user.avatar">

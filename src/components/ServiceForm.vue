@@ -74,6 +74,9 @@
                               </div>
               </template>
           </div>
+          <div class="mui-input-row" style="margin: 10px 5px;">
+            <textarea v-model="notes" id="textarea" rows="3" placeholder="Any Other Requests"></textarea>
+          </div>
 				</div>
 
 
@@ -106,7 +109,8 @@ export default {
       additional: [],
       position: null,
       others: [],
-      user: null
+      user: null,
+      notes: ""
     };
   },
   created() {
@@ -136,6 +140,7 @@ export default {
       this.address = order.address;
       this.position = order.position;
       this.others = order.others;
+      this.notes = order.notes;
     }
     // let weui = document.createElement("script");
     // weui.setAttribute(
@@ -170,7 +175,7 @@ export default {
         order_type: this.$route.params.order_type,
         name: this.name,
         phone: this.phone,
-        time: this.time,
+        time: this.time.substring(0,16),
         city: this.city,
         address: this.address,
         bedroom: this.bedroom,
@@ -178,14 +183,16 @@ export default {
         additional: this.additional,
         hours: this.getHour(this.$route.params.order_type,this.bedroom,this.additional),
         position: this.position,
-        others: this.others
+        others: this.others,
+        notes: this.notes
       };
 
       let d = new Date(Date.parse(this.time + "Z"));
+      console.log(d.getTime(),new Date().getTime());
       let hr = new Date(
         Date.parse(this.time + "Z") + d.getTimezoneOffset() * 60000
       ).getHours();
-      if (hr+details.hours >23 || hr < 8){
+      if (hr+details.hours >23 || hr < 8 || ((d.getTime()+ d.getTimezoneOffset() * 60000)<new Date().getTime())){
 
         mui.toast("Please Enter Correct Time！");
         return;

@@ -29,7 +29,7 @@
 							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/QGX5vpdWrTS24uVgVcuh.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
-									<h3>AIRBNB CLEANING</h3>
+									<h3>AIRBNB Cleaning</h3>
 								</div>
 							</div>
 						</router-link>
@@ -39,7 +39,7 @@
 							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/F87bJWudFFzD5ITZn2Lk.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
-									<h3>Home CLEANING</h3>
+									<h3>Home Cleaning</h3>
 								</div>
 							</div>
 							</router-link>
@@ -49,7 +49,7 @@
 							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/i1pfxjezYz9dV3pqJYNp.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
-									<h3>Moving CLEANING</h3>
+									<h3>Moving Cleaning</h3>
 								</div>
 							</div>
 							</router-link>
@@ -138,6 +138,7 @@ oa-contact-position {
 .mui-card {
   margin-bottom: 0px;
   margin-top: 15px;
+  border-radius: 8px !important;
 }
 .mui-table-view {
   padding-bottom: 20px;

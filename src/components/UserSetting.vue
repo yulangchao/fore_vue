@@ -61,10 +61,13 @@ export default {
       loading: false,
       user: null,
       images: [],
-      selected_image: null,
+      selected_image: null
     };
   },
   created() {
+    if (!this.$route.params.user) {
+      this.$router.push("/setting");
+    }
     this.user = this.$route.params.user;
     console.log(this.user);
   },
@@ -95,7 +98,7 @@ export default {
         .post(
           "http://foreclean.tk:8000/api/changeUserSetting",
           JSON.stringify({
-            avatar: this.images.length == 0? this.user.avatar : this.images[0],
+            avatar: this.images.length == 0 ? this.user.avatar : this.images[0],
             name: this.user.name,
             phone: this.user.phone
           }),

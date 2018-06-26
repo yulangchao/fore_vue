@@ -8,6 +8,19 @@ import Mui from 'vue-awesome-mui'
 import 'vue-awesome-mui/mui/sass/mui.scss'
 import infiniteScroll from 'vue-infinite-scroll'
 import common from './common'
+import MintUI from 'mint-ui'
+import 'mint-ui/lib/style.css'
+
+import { Lazyload } from 'mint-ui';
+import { Loadmore } from 'mint-ui';
+
+Vue.component(Loadmore.name, Loadmore);
+Vue.use(Lazyload);
+Vue.use(MintUI)
+
+
+
+
 Vue.use(infiniteScroll)
 Vue.use(common)
 Vue.config.productionTip = false

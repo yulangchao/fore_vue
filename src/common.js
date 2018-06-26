@@ -11,13 +11,19 @@ let common = function(Vue, options) {
     //全局函数2
     return "http://foreclean.tk:8000/storage/cleaners/May2018/HFpSgPcvMpTUf9u5A9J9.jpg";
   };
-
+  Vue.prototype.url_prefix = function() {
+    //全局函数2
+    return "http://foreclean.tk:8000/storage/";
+  };
   Vue.prototype.getTimeFromMinutes = function(time) {
     let min = time % 60;
     console.log(min);
     let hour = Math.floor(time / 60);
     if (min < 10) {
       min = "0" + min;
+    }
+    if (hour < 10) {
+      hour = "0" + hour;
     }
     return hour + ":" + min;
   };

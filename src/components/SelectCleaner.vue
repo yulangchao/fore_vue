@@ -7,12 +7,20 @@
 		<nav class="mui-bar mui-bar-tab">
         <a class="weui-btn weui-btn_primary"  type="submit" id="showTooltips" @click="createOrder">Create Order</a>
 		</nav>
+		<div id="modal1" v-if="loading_spin" class="mui-modal mui-active" style="opacity: 0.6;">
+          <span class="mui-spinner" style="    top: 50%;
+        position: absolute;
+        width: 40px;
+        height: 40px;left: 0;
+        right: 0;    margin: auto;"></span>
+		</div>
+
     <div id="modal" :class="modalClass" v-if="cleaner != null">
 				<header class="mui-bar mui-bar-nav">
 					<a class="mui-icon mui-icon-close mui-pull-right" @click="closeModal"></a>
 					<h1 class="mui-title">{{cleaner.name}}</h1>
 				</header>
-				<div class="mui-content" style="height: 100%;margin-top:44px !important;overflow: scroll;">
+				<div class="mui-content" style="height: 100%;overflow: scroll;">
             <ul v-if="cleaner" class="mui-table-view mui-table-view-chevron" style="margin-top:0px">
               <li class="mui-table-view-cell mui-media">
                 <a class="" href="#account">
@@ -36,7 +44,7 @@
             <ul class="mui-table-view">
               <template v-for="review in cleaner_review">
                 <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-                    <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="review.avatar==null?url() : review.avatar">
+                    <img class="mui-media-object mui-pull-left" style="border-radius: 100%;width:42px;" v-lazy="review.avatar==null?url() : review.avatar">
                     <h5 class="mui-pull-right"></h5>
                     <div class="mui-media-body">
                       <p class="mui-pull-right">{{review.created_at.split(" ")[0]}}</p>
@@ -104,7 +112,7 @@
 
           <div class="mui-table-view-cell mui-input-row mui-checkbox mui-media mui-left">
               <input style="left: 0px; width: 48px;height: 72px;padding: 20px 10px;top: 0px;" :id="'check' +da.id" v-model="cleaners" :value="da.id" type="checkbox" @change="selected($event,da.id);" :disabled="cleaners.indexOf(da.id)<0 && cleaners.length >=3">
-              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" :src="da.avatar==null?url() : da.avatar">
+              <img class="mui-media-object mui-pull-left" style="border-radius: 100%" v-lazy="da.avatar==null?url() : da.avatar">
               <button type="button" class="mui-btn mui-btn-primary view-btn" @click="view(da)">View</button>
               <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body">
@@ -137,6 +145,7 @@ export default {
   data() {
     return {
       busy: false,
+      loading_spin: false,
       data: [],
       page: 0,
       loading: true,
@@ -145,7 +154,7 @@ export default {
       cleaner: null,
       modalClass: "mui-modal",
       cleaner_review: [],
-      premium_cleaner: {"id": 6, "name": "Fore", "sex": 1, "city": 1, "rate": 5, "avatar": "files/May2018/9OFHyqBtWwZqbebh4e9V.png", "pay_rate": 30}
+      premium_cleaner: {"id": 6, "name": "Fore", "sex": 1, "city": 1, "rate": 5, "avatar": this.url_prefix()+"files/May2018/9OFHyqBtWwZqbebh4e9V.png", "pay_rate": 30}
     };
   },
   created() {
@@ -195,6 +204,7 @@ export default {
               Authorization: "Bearer " + localStorage.getItem("access_token")
             }
           };
+          this.loading_spin = true;
           axios
             .post(
               "http://foreclean.tk:8000/api/createOrder",
@@ -211,7 +221,8 @@ export default {
                 start_time: start_time,
                 end_time: end_time,
                 selected_cleaners: [-1],
-                city: this.order.city
+                city: this.order.city,
+                notes: this.order.notes
               }),
               config
             )
@@ -223,9 +234,11 @@ export default {
               } else {
                 mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
               }
+              this.loading_spin = false;
             })
             .catch(error => {
               mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
+              this.loading_spin = false;
               console.log(error.response);
             });
         } else {
@@ -253,6 +266,7 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("access_token")
         }
       };
+      this.loading_spin = true;
       setTimeout(() => {
         axios
           .post(
@@ -270,7 +284,8 @@ export default {
               start_time: start_time,
               end_time: end_time,
               selected_cleaners: this.cleaners,
-              city: this.order.city
+              city: this.order.city,
+              notes: this.order.notes
             }),
             config
           )
@@ -282,9 +297,11 @@ export default {
             } else {
               mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
             }
+            this.loading_spin = false;
           })
           .catch(error => {
             mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
+            this.loading_spin = false;
             console.log(error.response);
           });
       }, 0);
@@ -430,4 +447,12 @@ export default {
 .mui-bar-nav ~ .mui-content {
   padding-bottom: 60px !important;
 }
+
+:not(.mui-android) .mui-modal .mui-content {
+  margin-top:44px !important
+}
+.mui-android .mui-modal .mui-content {
+    margin-top:0px !important
+}
+
 </style>

@@ -164,7 +164,7 @@ export default {
             });
           // ...
         })
-        .catch(function(error) {
+        .catch((error) => {
           this.loading = false;
           console.log(error);
           // Handle Errors here.

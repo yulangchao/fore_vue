@@ -55,7 +55,8 @@ let router = new Router({
       name: 'Service',
       component: Service,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        keepAlive: true
       }
     },
     {
@@ -111,7 +112,8 @@ let router = new Router({
       name: 'Cleaner',
       component: Cleaner,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        keepAlive: true
       }
     },
     {

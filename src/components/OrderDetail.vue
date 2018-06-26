@@ -40,7 +40,7 @@
         <ul v-if="order.cleaner_id" class="mui-table-view">
           <template v-if="cleaner">
             <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-                <img class="mui-media-object mui-pull-left" style="border-radius: 2px" :src="cleaner.avatar==null?url() : cleaner.avatar">
+                <img class="mui-media-object mui-pull-left" style="border-radius: 2px" v-lazy="cleaner.avatar==null?url() : cleaner.avatar">
                 <!-- <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button> -->
                 <h5 class="mui-pull-right"></h5>
                 <div class="mui-media-body">
@@ -60,7 +60,7 @@
         <ul v-if="pendding_cleaners.length > 0" class="mui-table-view">
           <template v-if="pendding_cleaners.length > 0" v-for="pendding_cleaner of pendding_cleaners">
             <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-                <img class="mui-media-object mui-pull-left" style="border-radius: 2px" :src="pendding_cleaner.avatar==null?url() : pendding_cleaner.avatar">
+                <img class="mui-media-object mui-pull-left" style="border-radius: 2px" v-lazy="pendding_cleaner.avatar==null?url() : pendding_cleaner.avatar">
                 <!-- <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button> -->
                 <h5 class="mui-pull-right"></h5>
                 <div class="mui-media-body">
