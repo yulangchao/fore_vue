@@ -2,7 +2,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
       <a @click="navBack" class="mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 style="color:white" v-if="cleaner" class="mui-title">{{cleaner.name}}'s Comments</h1>
+			<h1 style="color:white" class="mui-title">Reviews To Me</h1>
 		</header>
     <div class="weui-gallery" v-if="selected_image" style="display:block">
       <span class="weui-gallery__img"  @click="closeImage()" :style="'background-image: url('+selected_image+')'"></span>
@@ -16,36 +16,21 @@
 			</div>
     </div>
 		<div class="mui-content" style="margin-bottom:50px;">
-      <ul v-if="cleaner" class="mui-table-view mui-table-view-chevron" style="margin-top:0px">
+      <ul v-if="user" class="mui-table-view mui-table-view-chevron" style="margin-top:0px">
         <li class="mui-table-view-cell mui-media">
           <a class="" href="#account">
-            <img class="mui-media-object mui-pull-left head-img"  style="border-radius: 100%" id="head-img" v-lazy="cleaner.avatar == null ?url() : cleaner.avatar ">
+            <img class="mui-media-object mui-pull-left head-img"  style="border-radius: 100%" id="head-img" v-lazy="user.avatar == null ?url() : user.avatar ">
             <div class="mui-media-body" style="text-align:left">
-              <h4>{{cleaner.name}}              
-                <template v-for="i in cleaner.rate">
+              <h4>{{user.name}}              
+                <template v-for="i in user.rate">
                       <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
                 </template>
                 
               </h4>
 
-              <p class='mui-ellipsis'>{{getCityName(cleaner.city)}}
-                 <span style="position:absolute;right:10px">Total Orders: {{cleaner.order_count}}</span>
-                 <span style="position:absolute;right:10px;top:15px">Pay Rate: ${{cleaner.pay_rate}}/hr</span>
-              </p>
-              <p class='mui-ellipsis'>Lang:{{cleaner.languages}}
-                 <span style="position:absolute;right:10px">Work Years: {{cleaner.work_years}}</span>
-              </p>
               
             </div>
-            <div class="mui-media-body" style="text-align:left">
-              <h5 class="font-bold">Skills</h5>
-              <div class="mui-row">             
-                <template v-for="i in JSON.parse(cleaner.skills)">
-                     <div class="mui-col-xs-6"> - {{i}}</div>
-                </template>
-                
-              </div>
-            </div>
+
           </a>
         </li>
       </ul>
@@ -68,7 +53,7 @@
                 <p class='mui-ellipsis' style="text-align: left;white-space: pre-line;word-wrap: break-word;">{{review.comments}}</p>
               </div>
 
-          		<div v-if="JSON.parse(review.images).length>0" class="weui-uploader" style="padding: 10px;">
+          		<div v-if="review.images !=null && JSON.parse(review.images).length>0" class="weui-uploader" style="padding: 10px;">
                 <div class="weui-uploader__bd">
                     <ul class="weui-uploader__files" id="uploaderFiles">
                       <template v-for="image of JSON.parse(review.images)"> 
@@ -94,56 +79,26 @@
 import axios from "axios";
 var count = 0;
 export default {
-  name: "cleanerReview",
+  name: "userReview",
   data() {
     return {
       busy: false,
       data: [],
       page: 0,
       loading: true,
-      cleaner: null,
+      user: null,
       selected_image: null,
       ga_images: [],
-      cleaner_id: null
+      user_id: null
     };
   },
   created() {
-    if (this.$route.params.nav == "select") {
-      this.cleaner_id = this.$route.params.cleaner_id;
-      axios
-        .post(
-          "http://foreclean.tk:8000/api/getCleanerList",
-          JSON.stringify({ cleaner_id: this.$route.params.cleaner_id })
-        )
-        .then(response => {
-          console.log(response);
-          if (response.data.success == true) {
-            this.cleaner = response.data.cleaners[0];
-          } else {
-            mui.toast(response.data.error);
-          }
-        })
-        .catch(error => {
-          console.log(error.response);
-        });
-    } else {
-      if (!this.$route.params.cleaner) {
-        this.$router.push("/cleaner");
-      }
-      this.cleaner = this.$route.params.cleaner;
-      this.cleaner_id = this.cleaner.id;
-    }
+      this.user_id  = JSON.parse(localStorage.getItem('user')).id;
+      this.user = JSON.parse(localStorage.getItem('user'));
   },
   methods: {
     navBack() {
-      if (this.$route.params.order) {
-        this.$router.push({
-          name: "SelectCleaner",
-          params: { order: this.$route.params.order }
-        });
-      } else {
         this.$router.go(-1);
-      }
     },
     NextImage: function() {
       let index = this.ga_images.indexOf(this.selected_image);
@@ -183,9 +138,9 @@ export default {
       setTimeout(() => {
         axios
           .post(
-            "http://foreclean.tk:8000/api/getReviewForCleaner",
+            "http://foreclean.tk:8000/api/getReviewForClient",
             JSON.stringify({
-              cleaner_id: this.cleaner_id,
+              user_id: this.user_id,
               offset: this.page * 10
             })
           )

@@ -117,7 +117,7 @@ export default {
     this.user = JSON.parse(localStorage.getItem('user'));
     this.name = this.user.name;
     this.phone = this.user.phone
-    this.time = new Date().toISOString().substring(0,16);
+    this.time = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().substring(0,16);
   },
   mounted() {
     
@@ -194,7 +194,7 @@ export default {
       ).getHours();
       if (hr+details.hours >23 || hr < 8 || ((d.getTime()+ d.getTimezoneOffset() * 60000)<new Date().getTime())){
 
-        mui.toast("Please Enter Correct Time！");
+        mui.toast("The Working time is between 8-23!");
         return;
       }
 

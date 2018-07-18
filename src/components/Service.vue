@@ -131,10 +131,10 @@ oa-contact-position {
   float: left;
 }
 
-.mui-content > .mui-table-view:first-child {
+/* .mui-content > .mui-table-view:first-child {
   margin-top: 0px;
   padding-top: 15px;
-}
+} */
 .mui-card {
   margin-bottom: 0px;
   margin-top: 15px;

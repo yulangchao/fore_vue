@@ -17,13 +17,20 @@ import Service from '@/components/Service'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Review from '@/components/Review'
+import Private from '@/components/Private'
 import CleanerReview from '@/components/CleanerReview'
+import MyReview from '@/components/MyReview'
 import firebase from 'firebase'
 
 Vue.use(Router)
 
 let router = new Router({
   routes: [
+    {
+      path: '/private',
+      name: 'Private',
+      component: Private
+    },
     {
       path: '*',
       redirect: '/login'
@@ -113,7 +120,6 @@ let router = new Router({
       component: Cleaner,
       meta: {
         requiresAuth: true,
-        keepAlive: true
       }
     },
     {
@@ -152,6 +158,14 @@ let router = new Router({
       path: '/cleaner/review',
       name: 'CleanerReview',
       component: CleanerReview,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/setting/review',
+      name: 'MyReview',
+      component: MyReview,
       meta: {
         requiresAuth: true
       }

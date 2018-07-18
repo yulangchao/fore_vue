@@ -19,7 +19,7 @@
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-12 mui-text-left">
 		                    <h4 class="mui-ellipsis" style="white-space:initial">{{order.address}}</h4>
-                        <h5 style="font-weight:bold;color:#EB482F ">Status: {{getOrderStatus(order.order_status)}}</h5>
+                        <h5 style="font-weight:bold;color:#EB482F ">Status: {{getOrderStatus(order.order_status)}}{{order.order_status}}</h5>
 		                    <h5 style="font-weight:bold">Booked Time: {{order.time.replace("T", " ").split(".")[0]}} + <span style="color:red"> {{order.hours}} Hours</span></h5>
                         <h5 style="font-weight:bold">Created Time: {{order.created_at}}</h5>
 		                    <p class="mui-h6 mui-ellipsis">
@@ -36,14 +36,18 @@
 		            </div>
 		        </li>
 		    </ul>
-        <h5 v-if="order.cleaner_id" class="mui-text-left">*Selected Cleaner</h5>
+        <h5 v-if="order.cleaner_id" class="font-bold">*Selected Cleaner</h5>
         <ul v-if="order.cleaner_id" class="mui-table-view">
           <template v-if="cleaner">
             <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-                <img class="mui-media-object mui-pull-left" style="border-radius: 2px" v-lazy="cleaner.avatar==null?url() : cleaner.avatar">
+                <img class="mui-media-object mui-pull-left" style="border-radius:100%" v-lazy="cleaner.avatar==null?url() : cleaner.avatar">
                 <!-- <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button> -->
                 <h5 class="mui-pull-right"></h5>
                 <div class="mui-media-body">
+                  <span data-v-7e957575="" style="position: absolute; right: 10px; top: 15px;">
+                    <button v-if="!1" type="button" style="padding:2px;width:auto" class="mui-btn mui-btn-warning" >Save</button>
+                    <button v-if="1" type="button" style="padding:2px;width:auto" class="mui-btn mui-btn-success" >Saved</button> 
+                  </span>
                   <h4 class='mui-ellipsis' style="text-align:left">{{cleaner.name}}&nbsp;
                     <template v-for="i in cleaner.rate">
                         <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
@@ -56,11 +60,11 @@
             </div>
           </template>
         </ul>
-        <h5 v-if="pendding_cleaners.length > 0" class="mui-text-left">*Pending cleaners</h5>
+        <h5 v-if="pendding_cleaners.length > 0" class="font-bold">*Pending cleaners</h5>
         <ul v-if="pendding_cleaners.length > 0" class="mui-table-view">
           <template v-if="pendding_cleaners.length > 0" v-for="pendding_cleaner of pendding_cleaners">
             <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-                <img class="mui-media-object mui-pull-left" style="border-radius: 2px" v-lazy="pendding_cleaner.avatar==null?url() : pendding_cleaner.avatar">
+                <img class="mui-media-object mui-pull-left" style="border-radius:100%" v-lazy="pendding_cleaner.avatar==null?url() : pendding_cleaner.avatar">
                 <!-- <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button> -->
                 <h5 class="mui-pull-right"></h5>
                 <div class="mui-media-body">
@@ -76,7 +80,7 @@
             </div>
           </template>
         </ul>
-        <h5 class="mui-text-left">*Fee Details</h5>
+        <h5 class="font-bold">*Fee Details</h5>
 		    <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
@@ -102,7 +106,7 @@
 		            </div>
 		        </li>
 		    </ul>
-        <h5 v-if="order.review_status == 1" class="mui-text-left">*Comment</h5>
+        <h5 v-if="order.review_status == 1" class="">*Comment</h5>
 		    <ul v-if="order.review_status == 1 && review" class="mui-table-view mui-table-view-striped mui-table-view-condensed">
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">

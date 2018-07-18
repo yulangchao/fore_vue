@@ -211,11 +211,11 @@ export default {
                 this.busy = false;
               }
             } else {
-              mui.toast("数据获取失败");
+              mui.toast("Getting Data Failed!");
             }
           })
           .catch(error => {
-            mui.toast("数据获取失败");
+            mui.toast("Getting Data Failed!");
             console.log(error.response);
           });
       }, 0);

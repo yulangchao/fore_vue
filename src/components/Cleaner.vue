@@ -71,11 +71,11 @@
 
 <script>
 import axios from "axios";
-import cleanerReview from './CleanerReview.vue'
+import cleanerReview from "./CleanerReview.vue";
 var count = 0;
 export default {
   name: "cleaner",
-  components:{
+  components: {
     cleanerReview
   },
   data() {
@@ -86,33 +86,40 @@ export default {
       loading: true,
       cleaner: null,
       modalClass: "mui-modal",
-      city: 0 ,
+      city: 0,
       price: 0,
       cleaner_page: 0,
       cleaner_reviews: [],
       cleaner_loading: true,
-      cleaner_busy: false
+      cleaner_busy: false,
+      lock: false
     };
   },
   mounted() {
-    console.log(this.cleaner_loading);
-    console.log(this.cleaner_busy);
+    // console.log(this.cleaner_loading);
+    // console.log(this.cleaner_busy);
+    // function getLocation() {
+    //     axios.get("https://ipinfo.io").then((response) => {
+    //         alert(JSON.stringify(response.data));
+    //     });
+    // }
   },
   methods: {
     refresh: function() {
-       console.log(this.city,this.price);
-       this.data = [];
-       this.page = 0;
-       this.loadMore();
+      this.data = [];
+      this.loading = true;
+      this.busy = false;
+      this.page = 0;
+      // this.loadMore();
     },
-    view: function(da) {
-      this.cleaner_reviews=[];
-      this.cleaner_loading = true;
-      this.cleaner_busy = false;
-      this.cleaner_page=0;
-      this.cleaner = da;
-      this.modalClass = "mui-modal mui-active";
-    },
+    // view: function(da) {
+    //   this.cleaner_reviews = [];
+    //   this.cleaner_loading = true;
+    //   this.cleaner_busy = false;
+    //   this.cleaner_page = 0;
+    //   this.cleaner = da;
+    //   this.modalClass = "mui-modal mui-active";
+    // },
     closeModal: function(da) {
       this.modalClass = "mui-modal";
     },
@@ -120,13 +127,16 @@ export default {
       // this.$router.replace("hello");
     },
     loadMore: function() {
-      this.busy = true;
-
-      setTimeout(() => {
+      this.busy = false;
+      if (this.lock == false) {
         axios
           .post(
             "http://foreclean.tk:8000/api/getCleanerList",
-            JSON.stringify({"city": this.city,"price": this.price})
+            JSON.stringify({
+              city: this.city,
+              price: this.price,
+              offset: this.page * 10
+            })
           )
           .then(response => {
             console.log(response);
@@ -140,46 +150,16 @@ export default {
                 this.busy = false;
               }
             } else {
-              mui.toast("数据获取失败");
+              mui.toast("Getting Data Failed!");
             }
+            this.lock = false;
           })
           .catch(error => {
             console.log(error.response);
+            this.lock = false;
           });
-      }, 0);
-    },
-    loadMoreCleaner: function() {
-      this.cleaner_busy = true;
-
-      setTimeout(() => {
-        axios
-          .post(
-            "http://foreclean.tk:8000/api/getReviewForCleaner",
-            JSON.stringify({"cleaner_id": this.cleaner.id,"offset": this.cleaner_page*10})
-          )
-          .then(response => {
-            console.log(response);
-            if (response.data.success == true) {
-              this.cleaner_page++;
-              this.cleaner_reviews = this.cleaner_reviews.concat(response.data.reviews);
-
-              if (response.data.reviews.length < 5) {
-                this.cleaner_busy = true;
-                this.cleaner_loading = false;
-              } else {
-                this.cleaner_busy = false;
-              }
-              console.log(this.cleaner_loading,this.cleaner_busy);
-            } else {
-              mui.toast("数据获取失败");
-              this.cleaner_busy = false;
-            }
-          })
-          .catch(error => {
-            this.cleaner_busy = false;
-            console.log(error.response);
-          });
-      }, 0);
+      }
+      this.lock = true;
     }
   }
 };
@@ -194,19 +174,19 @@ export default {
   font-size: 14px !important;
 }
 .mui-btn-block {
-    display: inline;
-    padding: 15px auto;
-    width:50%; 
-    text-align-last: center !important; 
-    text-align: center !important; 
-    padding: 15px 50px;
-    margin-bottom: 0px;
+  display: inline;
+  padding: 15px auto;
+  width: 50%;
+  text-align-last: center !important;
+  text-align: center !important;
+  padding: 15px 50px;
+  margin-bottom: 0px;
 }
 
 .view-btn {
   width: auto !important;
 }
 .mui-android .mui-modal .mui-bar {
-    position: absolute !important;
+  position: absolute !important;
 }
 </style>

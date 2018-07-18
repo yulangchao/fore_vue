@@ -31,7 +31,7 @@ let common = function(Vue, options) {
     let status_name = "";
     switch (status) {
       case 1:
-        status_name = "Pending";
+        status_name = "Pending For Cleaners";
         break;
       case 2:
         status_name = "Unpaid";

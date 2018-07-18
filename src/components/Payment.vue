@@ -36,7 +36,7 @@
 		            </div>
 		        </li>
 		    </ul>
-        <h5 class="mui-text-left">*Selected Cleaner</h5>
+        <h5>*Selected Cleaner</h5>
         <ul class="mui-table-view">
           <template v-if="cleaner">
             <div class="mui-table-view-cell mui-input-row mui-media mui-left">
@@ -56,7 +56,7 @@
             </div>
           </template>
         </ul>
-        <h5 class="mui-text-left">*Payment Details</h5>
+        <h5>*Payment Details</h5>
 		    <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
@@ -72,7 +72,7 @@
 		        </li>
 		    </ul>
 			</div>
-      <h5 class="mui-text-left">*Payment Method</h5>
+      <h5>*Payment Method</h5>
 			<card class='stripe-card'
 				:class='{ complete }'
 				stripe='pk_test_OZIIfUkb4dEVo98bneuTa2pZ'

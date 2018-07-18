@@ -15,7 +15,7 @@
         right: 0;    margin: auto;"></span>
 		</div>
 
-    <div id="modal" :class="modalClass" v-if="cleaner != null">
+    <!-- <div id="modal" :class="modalClass" v-if="cleaner != null">
 				<header class="mui-bar mui-bar-nav">
 					<a class="mui-icon mui-icon-close mui-pull-right" @click="closeModal"></a>
 					<h1 class="mui-title">{{cleaner.name}}</h1>
@@ -24,7 +24,7 @@
             <ul v-if="cleaner" class="mui-table-view mui-table-view-chevron" style="margin-top:0px">
               <li class="mui-table-view-cell mui-media">
                 <a class="" href="#account">
-                  <img class="mui-media-object mui-pull-left head-img" id="head-img" :src="cleaner.avatar == null ?url() :  cleaner.avatar">
+                  <img class="mui-media-object mui-pull-left head-img"  style="border-radius: 100%" id="head-img" :src="cleaner.avatar == null ?url() :  cleaner.avatar">
                   <div class="mui-media-body" style="text-align:left">
                     <h4>{{cleaner.name}}              
                       <template v-for="i in cleaner.rate">
@@ -34,8 +34,21 @@
                     </h4>
 
                     <p class='mui-ellipsis'>{{getCityName(cleaner.city)}}
+                      <span style="position:absolute;right:10px">Total Orders: {{cleaner.pay_rate}}</span>
                       <span style="position:absolute;right:10px;top:15px">Pay Rate: ${{cleaner.pay_rate}}/hr</span>
                     </p>
+                    <p class='mui-ellipsis'>Lang:{{cleaner.languages}}
+                      <span style="position:absolute;right:10px">Work Years: {{cleaner.work_years}}</span>
+                    </p>
+                  </div>
+                  <div class="mui-media-body" style="text-align:left">
+                    <h5 class="font-bold">Skills</h5>
+                    <div class="mui-row">             
+                      <template v-for="i in 6">
+                          <div class="mui-col-xs-6"> - {{i}}</div>
+                      </template>
+                      
+                    </div>
                   </div>
                 </a>
               </li>
@@ -63,14 +76,14 @@
               </template>
             </ul>
 				</div>
-		</div>
+		</div> -->
 		<div class="mui-content">
       <div>
 		    <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-12 mui-text-left">
-		                    <h4 class="mui-ellipsis">{{order.address}}</h4>
+		                    <h4 class="mui-ellipsis" style="white-space: initial;">{{order.address}}</h4>
 		                    <h5 style="font-weight:bold">Time: {{order.time.replace("T", " ").split(".")[0]}} + <span style="color:red"> {{order.hours}} Hours</span></h5>
 		                    <p class="mui-h6 mui-ellipsis">
                           <button type="button" class="mui-btn mui-btn-primary">Bedroom <span class="mui-badge mui-badge-primary">{{order.bedroom}}</span></button>
@@ -86,7 +99,7 @@
 		    </ul>
 		
 			</div>
-      <h5 class="mui-text-left">*Select Our Premium Cleaners</h5>
+      <h5 class="">*Select Our Premium Cleaners</h5>
 			<ul class="mui-table-view">
         <template>
           <div class="mui-table-view-cell mui-input-row mui-media mui-left">
@@ -99,14 +112,14 @@
                       <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
                   </template>
                 </h4>
-                <p class='mui-ellipsis distance'>15km</p>
+                <p class='mui-ellipsis distance'></p>
                 <p class='mui-ellipsis'><span  style="float:left">Richmond</span>&nbsp; <span style="color:red;margin-right:60px;float:right">Price: 30/hr</span></p>
               </div>
            
           </div>
         </template>
 			</ul>
-      <h5 class="mui-text-left">*Select at Most 3 Cleaners ({{this.cleaners.length}}/3)</h5>
+      <h5 class="">*Select at Most 3 Cleaners ({{this.cleaners.length}}/3)</h5>
 			<ul class="mui-table-view" style="margin-bottom: 50px;">
         <template v-for="da in data">
 
@@ -121,7 +134,7 @@
                       <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
                   </template>
                 </h4>
-                <p class='mui-ellipsis distance'>15km</p>
+                <p class='mui-ellipsis distance'>{{da.distance.toFixed(2)}}km</p>
                 <p class='mui-ellipsis'><span  style="float:left">{{getCityName(da.city)}}</span>&nbsp; <span style="color:red;margin-right:50px;float:right">Price: {{da.pay_rate}}/hr</span></p>
               </div>
            
@@ -154,7 +167,15 @@ export default {
       cleaner: null,
       modalClass: "mui-modal",
       cleaner_review: [],
-      premium_cleaner: {"id": 6, "name": "Fore", "sex": 1, "city": 1, "rate": 5, "avatar": this.url_prefix()+"files/May2018/9OFHyqBtWwZqbebh4e9V.png", "pay_rate": 30}
+      premium_cleaner: {
+        id: 6,
+        name: "Fore",
+        sex: 1,
+        city: 1,
+        rate: 5,
+        avatar: this.url_prefix() + "files/May2018/9OFHyqBtWwZqbebh4e9V.png",
+        pay_rate: 30
+      }
     };
   },
   created() {
@@ -307,12 +328,16 @@ export default {
       }, 0);
     },
     view: function(da) {
-      this.cleaner = da;
-      this.loadReview();
-      if(da.id !=6){
-       document.getElementById("check" + da.id).click();
-      }
-      this.modalClass = "mui-modal mui-active";
+      this.$router.push({
+        name: "CleanerReview",
+        params: { nav : 'select', cleaner_id: da.id, order:this.order }
+      });
+      // this.cleaner = da;
+      // this.loadReview();
+      // if (da.id != 6) {
+      //   document.getElementById("check" + da.id).click();
+      // }
+      // this.modalClass = "mui-modal mui-active";
     },
     closeModal: function(da) {
       this.cleaner_review = [];
@@ -327,27 +352,28 @@ export default {
       }
     },
     loadReview: function() {
-        console.log(this.cleaner.id);
-        axios
-          .post(
-            "http://foreclean.tk:8000/api/getReviewForCleaner",
-            JSON.stringify({
-              cleaner_id: this.cleaner.id,
-              offset: 0
-            })
-          )
-          .then(response => {
-            console.log(response);
-            if (response.data.success == true) {
-              this.cleaner_review = this.cleaner_review.concat(response.data.reviews);
-            } else {
-              mui.toast("数据获取失败");
-            }
+      console.log(this.cleaner.id);
+      axios
+        .post(
+          "http://foreclean.tk:8000/api/getReviewForCleaner",
+          JSON.stringify({
+            cleaner_id: this.cleaner.id,
+            offset: 0
           })
-          .catch(error => {
-            console.log(error.response);
-          });
-
+        )
+        .then(response => {
+          console.log(response);
+          if (response.data.success == true) {
+            this.cleaner_review = this.cleaner_review.concat(
+              response.data.reviews
+            );
+          } else {
+            mui.toast("Getting Data Failed!");
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+        });
     },
     loadMore: function() {
       this.busy = true;
@@ -386,7 +412,7 @@ export default {
                 this.busy = false;
               }
             } else {
-              mui.toast("数据获取失败");
+              mui.toast("Getting Data Failed!");
             }
           })
           .catch(error => {
@@ -449,10 +475,9 @@ export default {
 }
 
 :not(.mui-android) .mui-modal .mui-content {
-  margin-top:44px !important
+  margin-top: 44px !important;
 }
 .mui-android .mui-modal .mui-content {
-    margin-top:0px !important
+  margin-top: 0px !important;
 }
-
 </style>
