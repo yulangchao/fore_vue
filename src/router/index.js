@@ -20,6 +20,8 @@ import Review from '@/components/Review'
 import Private from '@/components/Private'
 import CleanerReview from '@/components/CleanerReview'
 import MyReview from '@/components/MyReview'
+import SavedCleaner from '@/components/SavedCleaner'
+
 import firebase from 'firebase'
 
 Vue.use(Router)
@@ -174,6 +176,14 @@ let router = new Router({
       path: '/setting/usersetting',
       name: 'UserSetting',
       component: UserSetting,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/setting/savedCleaner',
+      name: 'SavedCleaner',
+      component: SavedCleaner,
       meta: {
         requiresAuth: true
       }

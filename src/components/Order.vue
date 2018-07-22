@@ -59,7 +59,7 @@
         </template>
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
-          <p v-if="!loading">No More Order</p>
+          <p v-if="!loading">End Of Order</p>
         </div>
 			</ul>
         <div slot="top" class="mint-loadmore-top">
@@ -93,7 +93,6 @@ export default {
       this.topStatus = status;
     },
     loadTop(id) {
-      console.log(123);
       this.data = [];
       this.loading = true;
       this.busy = false;
@@ -107,8 +106,8 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("access_token")
         }
       };
-      let btnArray = ["否", "是"];
-      mui.prompt("确认取消？", "取消原因", "取消订单", btnArray, e => {
+      let btnArray = ["No", "Yes"];
+      mui.prompt("Are you sure to cancel？", "Cancel Reason", "Cancel Order", btnArray, e => {
         if (e.index == 1) {
           axios
             .post(

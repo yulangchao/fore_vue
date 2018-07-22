@@ -102,7 +102,7 @@
       <h5 class="">*Select Our Premium Cleaners</h5>
 			<ul class="mui-table-view">
         <template>
-          <div class="mui-table-view-cell mui-input-row mui-media mui-left">
+          <div v-bind:style="cleaner_list.indexOf(6)>-1?'background: #f5e8ce !important':''" class="mui-table-view-cell mui-input-row mui-media mui-left">
               <img class="mui-media-object mui-pull-left" style="border-radius: 2px" src="http://foreclean.tk:8000/storage/files/May2018/9OFHyqBtWwZqbebh4e9V.png">
               <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button>
               <h5 class="mui-pull-right"></h5>
@@ -123,7 +123,7 @@
 			<ul class="mui-table-view" style="margin-bottom: 50px;">
         <template v-for="da in data">
 
-          <div class="mui-table-view-cell mui-input-row mui-checkbox mui-media mui-left">
+          <div v-bind:style="cleaner_list.indexOf(da.id)>-1?'background: #f5e8ce !important':''" class="mui-table-view-cell mui-input-row mui-checkbox mui-media mui-left">
               <input style="left: 0px; width: 48px;height: 72px;padding: 20px 10px;top: 0px;" :id="'check' +da.id" v-model="cleaners" :value="da.id" type="checkbox" @change="selected($event,da.id);" :disabled="cleaners.indexOf(da.id)<0 && cleaners.length >=3">
               <img class="mui-media-object mui-pull-left" style="border-radius: 100%" v-lazy="da.avatar==null?url() : da.avatar">
               <button type="button" class="mui-btn mui-btn-primary view-btn" @click="view(da)">View</button>
@@ -142,7 +142,7 @@
         </template>
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
-          <p v-if="!loading">No More Cleaners</p>
+          <p v-if="!loading">End Of Cleaners</p>
         </div>
 			</ul>
 		</div>
@@ -175,7 +175,8 @@ export default {
         rate: 5,
         avatar: this.url_prefix() + "files/May2018/9OFHyqBtWwZqbebh4e9V.png",
         pay_rate: 30
-      }
+      },
+      cleaner_list: []
     };
   },
   created() {
@@ -184,6 +185,7 @@ export default {
       this.$router.push("/service");
     }
     this.order = this.$route.params.order;
+    this.cleaner_list = JSON.parse(localStorage.getItem('saved_cleaners'));
   },
   mounted() {
     //重置后退键
@@ -250,15 +252,15 @@ export default {
             .then(response => {
               console.log(response);
               if (response.data.success == true) {
-                mui.toast("订单创建成果,等待Cleaners回复");
+                mui.toast("Created order and wait for responses from cleaners!");
                 this.$router.push("/order");
               } else {
-                mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
+                mui.toast("Created failed, Please Contact us or try later!");
               }
               this.loading_spin = false;
             })
             .catch(error => {
-              mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
+              mui.toast("Created failed, Please Contact us or try later!");
               this.loading_spin = false;
               console.log(error.response);
             });
@@ -313,15 +315,15 @@ export default {
           .then(response => {
             console.log(response);
             if (response.data.success == true) {
-              mui.toast("订单创建成果,等待Cleaners回复");
+              mui.toast("Created order and wait for responses from cleaners!");
               this.$router.push("/order");
             } else {
-              mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
+              mui.toast("Created failed, Please Contact us or try later!");
             }
             this.loading_spin = false;
           })
           .catch(error => {
-            mui.toast("订单创建失败，请稍后重试或者通知客服下单，谢谢");
+            mui.toast("Created failed, Please Contact us or try later!");
             this.loading_spin = false;
             console.log(error.response);
           });

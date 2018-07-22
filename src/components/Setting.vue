@@ -228,6 +228,18 @@
 			</div>
     </mt-popup>
 
+    <mt-popup v-model="FAQ" position="right" class="mint-popup-3" :modal="false">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-icon mui-icon-close mui-pull-right"  @click="FAQ = false"></a>
+				<h1 style="color:white" class="mui-title">FAQ</h1>
+			</header>
+
+
+			<div class="mui-content" style="text-align:left;padding:10px;overflow-y:auto">
+				faq
+			</div>
+    </mt-popup>
+
     <mt-popup v-model="contactUs" position="right" class="mint-popup-3" :modal="false">
 			<header class="mui-bar mui-bar-nav">
 				<a class="mui-icon mui-icon-close mui-pull-right"  @click="contactUs = false"></a>
@@ -289,16 +301,16 @@
 						</router-link>
 					</li>
 					<li class="mui-table-view-cell">
-						<a class="mui-navigate-right">
+						<router-link :to="{ name: 'SavedCleaner'}" class="mui-navigate-right">
 							My Saved Cleaners
+						</router-link>
+					</li>
+					<li style="background:#c1c1c1 !important" class="mui-table-view-cell">
+						<a class="mui-navigate-right">
+							Coupons (Comming Soon)
 						</a>
 					</li>
 					<!-- <li class="mui-table-view-cell">
-						<a class="mui-navigate-right">
-							Coupons
-						</a>
-					</li>
-					<li class="mui-table-view-cell">
 						<a class="mui-navigate-right">
 							Referal
 						</a>
@@ -313,6 +325,11 @@
 					<li class="mui-table-view-cell" @click=" ToS = true">
 						<a class="mui-navigate-right">
 							Terms of Service
+						</a>
+					</li>
+					<li class="mui-table-view-cell" @click=" FAQ = true">
+						<a class="mui-navigate-right">
+							FAQ
 						</a>
 					</li>
 					<li class="mui-table-view-cell" @click=" contactUs = true">
@@ -350,7 +367,8 @@ export default {
       user: null,
       aboutUs: false,
       contactUs: false,
-      ToS: false
+			ToS: false,
+			FAQ: false
     };
   },
   created() {
@@ -365,7 +383,8 @@ export default {
         .then(() => {
           mui.toast("Logging Out Successfully!");
           localStorage.removeItem("access_token");
-          localStorage.removeItem("user");
+					localStorage.removeItem("user");
+					localStorage.removeItem("saved_cleaners");
           this.$router.replace("login");
         });
     },

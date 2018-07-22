@@ -5,14 +5,15 @@
 			<h1 style="color:white" v-if="cleaner" class="mui-title">{{cleaner.name}}'s Comments</h1>
 		</header>
     <div class="weui-gallery" v-if="selected_image" style="display:block">
-      <span class="weui-gallery__img"  @click="closeImage()" :style="'background-image: url('+selected_image+')'"></span>
+      <span class="weui-gallery__img"  @click="closeImage()" :style="'background-image: url('+selected_image+');height: 100vh;'"></span>
+      <a href="javascript:" class="weui-gallery__del"   @click="PrevImage()" style="width:50px;left:0;height:100vh;position:absolute;z-index:1000">
+        <i style="position:absolute;top:50vh;left:5px;    font-size: 30px;color:#eb482f" class="fas fa-chevron-circle-left"></i>
+      </a>
+      <a href="javascript:" class="weui-gallery__del" @click="NextImage()" style="width:50px;right:0;height:100vh;position:absolute;z-index:1000">
+        <i style="position:absolute;top:50vh;right: 5px;    font-size: 30px;color:#eb482f" class="fas fa-chevron-circle-right" ></i>
+      </a>
       <div class="weui-gallery__opr">
-						<a href="javascript:" class="weui-gallery__del"   @click="PrevImage()" style="width:50%;float:left">
-              <i class="fas fa-chevron-circle-left"></i>
-						</a>
-            <a href="javascript:" class="weui-gallery__del" @click="NextImage()" style="width:50%;float:left">
-              <i style="fonts"class="fas fa-chevron-circle-right" ></i>
-						</a>
+
 			</div>
     </div>
 		<div class="mui-content" style="margin-bottom:50px;">
@@ -37,7 +38,9 @@
               </p>
               
             </div>
-            <div class="mui-media-body" style="text-align:left">
+            <div class="mui-media-body" style="text-align:left;width: 90vw;
+              font-weight: 300;
+              color: grey;">
               <h5 class="font-bold">Skills</h5>
               <div class="mui-row">             
                 <template v-for="i in JSON.parse(cleaner.skills)">
@@ -82,7 +85,7 @@
         
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
-          <p v-if="!loading"  class="font-bold">No More Reviews</p>
+          <p v-if="!loading"  class="font-bold">End Of Reviews</p>
         </div>
 			</ul>
 		</div>

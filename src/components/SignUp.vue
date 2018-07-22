@@ -91,15 +91,16 @@ export default {
                     "user",
                     JSON.stringify(response.data.user)
                   );
-                  mui.toast("Login Successfully!");
+                  mui.toast("Register Successfully!");
                   this.$router.replace("service");
                 } else {
-                  mui.toast("注册失败，请稍后再试");
+                  mui.toast("Register Failed!");
                 }
                 this.loading = false;
               })
               .catch(error => {
                 this.loading = false;
+                mui.toast("Register Failed!");
                 console.log(error.response);
               });
           },

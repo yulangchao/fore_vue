@@ -67,7 +67,7 @@
         
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
-          <p v-if="!loading"  class="font-bold">No More Reviews</p>
+          <p v-if="!loading"  class="font-bold">End Of Reviews</p>
         </div>
 			</ul>
 		</div>

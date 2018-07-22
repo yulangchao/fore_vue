@@ -1,52 +1,20 @@
 <template>
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			
-			<h1  style="color:white" class="mui-title">Serving Order</h1>
+			<a class="mui-icon  mui-action-back mui-icon-left-nav mui-pull-left"></a>
+			<h1  style="color:white" class="mui-title">Saved Cleaner</h1>
 		</header>
-		<nav class="mui-bar mui-bar-tab">
-			<router-link to="/service" class="mui-tab-item">
-				<span class="mui-icon mui-icon-home"></span>
-				<span class="mui-tab-label">Services</span>
-			</router-link>
-			<router-link to="/order" class="mui-tab-item">
-				<span class="mui-icon mui-icon-list"></span>
-				<span class="mui-tab-label">Orders</span>
-			</router-link>
-			<router-link to="/cleaner" class="mui-tab-item mui-active">
-				<span class="mui-icon mui-icon-contact"></span>
-				<span class="mui-tab-label">Cleaners</span>
-			</router-link>
-			<router-link to="/setting" class="mui-tab-item">
-				<span class="mui-icon mui-icon-gear"></span>
-				<span class="mui-tab-label">Settings</span>
-			</router-link>
-		</nav>
 		<div class="mui-content">
-      <div>
-				<div class="">
-        <select v-model="city" @change="refresh()" style="float:left;padding:10px;border-right: 1px solid grey !important;border-radius: 0px;" class="mui-btn mui-btn-block">
-					<option value="0">All Cities</option>
-					<option value="1">Vancouver</option>
-					<option value="2">Richmond</option>
-					<option value="3">Burnaby</option>
-					<option value="4">Coquiltlam</option>
-        	<option value="5">Surrey</option>
-				</select>
-        <select v-model="price" @change="refresh()" style="border-left: 1px solid grey !important;border-radius: 0px;padding:10px;" class="mui-btn mui-btn-block">
-					<option value="0">All Prices</option>
-					<option value="1">$10-$15</option>
-					<option value="2">$15-$20</option>
-					<option value="3">$20-$25</option>
-          <option value="4">$25-$30</option>
-				</select>
-				</div>
-			</div>
+
 			<ul class="mui-table-view">
         <template v-for="da in data">
-          <div v-bind:style="cleaner_list.indexOf(da.id)>-1?'background: #f5e8ce !important':''" class="mui-table-view-cell mui-input-row mui-media mui-left">
+          <div class="mui-table-view-cell mui-input-row mui-media mui-left">
               <img class="mui-media-object mui-pull-left" style="border-radius: 100%" v-lazy="da.avatar == null ?url():da.avatar ">
-              <router-link :to="{ name: 'CleanerReview', params: { cleaner: da}}" type="button" class="mui-btn mui-btn-primary view-btn">View</router-link>
+              <span data-v-7e957575="" style="position: absolute; right: 10px; top: 15px;">
+                <button v-if="cleaner_list.indexOf(da.id)<0" type="button"  @click="saveOrUnsave(da.id)" style="padding:2px;width:auto;top: -5px;" class="mui-btn mui-btn-warning" >Save</button>
+                <button v-if="cleaner_list.indexOf(da.id)>-1" type="button" @click="saveOrUnsave(da.id)" style="padding:2px;width:auto;top: -5px;" class="mui-btn mui-btn-success" >Saved</button> 
+              </span>
+              <router-link :to="{ name: 'CleanerReview', params: { cleaner: da}}" type="button"  style="padding:5px;top: 50px;" class="mui-btn mui-btn-primary view-btn">View</router-link>
               <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body">
                 <h4 class='mui-ellipsis' style="text-align:left">{{da.name}}&nbsp;
@@ -97,40 +65,58 @@ export default {
     };
   },
   created() {
-    this.cleaner_list = JSON.parse(localStorage.getItem('saved_cleaners'));
+    this.cleaner_list = JSON.parse(localStorage.getItem("saved_cleaners"));
   },
   methods: {
-    refresh: function() {
-      this.data = [];
-      this.loading = true;
-      this.busy = false;
-      this.page = 0;
-      // this.loadMore();
-    },
-    // view: function(da) {
-    //   this.cleaner_reviews = [];
-    //   this.cleaner_loading = true;
-    //   this.cleaner_busy = false;
-    //   this.cleaner_page = 0;
-    //   this.cleaner = da;
-    //   this.modalClass = "mui-modal mui-active";
-    // },
-    closeModal: function(da) {
-      this.modalClass = "mui-modal";
-    },
-    redirect: function() {
-      // this.$router.replace("hello");
+    saveOrUnsave(id) {
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token")
+        }
+      };
+      axios
+        .post(
+          "http://foreclean.tk:8000/api/saveOrUnsaveCleaner",
+          JSON.stringify({
+            cleaner_id: id
+          }),
+          config
+        )
+        .then(response => {
+          if (response.data.success == true) {
+            console.log(response.data);
+            if (response.data.message == "saved") {
+              this.cleaner_list.push(id);
+            } else {
+              this.cleaner_list.splice(
+                this.cleaner_list.indexOf(id),
+                1
+              );
+              this.data.splice(
+                this.cleaner_list.indexOf(id),
+                1
+              );
+            }
+            localStorage.setItem(
+              "saved_cleaners",
+              JSON.stringify(this.cleaner_list)
+            );
+          } else {
+            mui.toast(response.data.error);
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+        });
     },
     loadMore: function() {
       this.busy = false;
       if (this.lock == false) {
         axios
           .post(
-            "http://foreclean.tk:8000/api/getCleanerList",
+            "http://foreclean.tk:8000/api/getSavedCleanerList",
             JSON.stringify({
-              city: this.city,
-              price: this.price,
-              offset: this.page * 10
+              cleaner_list: this.cleaner_list
             })
           )
           .then(response => {

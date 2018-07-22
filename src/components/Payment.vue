@@ -28,6 +28,7 @@
                           <template v-for="additional of order.additional">
                                 <div style="font-size:15px"><i class="fas fa-check-circle"></i>    {{getAdditionalName(additional)}}</div>
                           </template>
+                          <div v-if="order.notes!=''" style="font-size:15px;font-weight:bold" class="mui-h6">Other Requests: <h4 class="mui-ellipsis" style="font-size:15px !important;white-space:initial">{{order.notes}}</h4></div>
                         </p>
 		                </div>
 		                <!-- <div class="mui-table-cell mui-col-xs-2 mui-text-right">

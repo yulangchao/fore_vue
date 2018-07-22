@@ -26,7 +26,7 @@
 					<div class="weui-cell">
 						<div class="weui-cell__hd"><label for="" class="weui-label">Time</label></div>
 						<div class="weui-cell__bd">
-							<input class="weui-input" type="datetime-local" v-model="time"  placeholder="Time" />
+							<input class="weui-input" type="datetime-local" :step="900" v-model="time"  placeholder="Time" />
 						</div>
 					</div>
 					<!-- <div class="weui-cell weui-cell_select weui-cell_select-after">
@@ -114,9 +114,11 @@ export default {
     };
   },
   created() {
+    
     this.user = JSON.parse(localStorage.getItem('user'));
     this.name = this.user.name;
     this.phone = this.user.phone
+    this.min =  new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().substring(0,16);
     this.time = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().substring(0,16);
   },
   mounted() {

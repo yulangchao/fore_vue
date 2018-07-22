@@ -229,7 +229,7 @@ export default {
         .then(response => {
           console.log(response);
           if (response.data.success == true) {
-            mui.toast("评价成功");
+            mui.toast("Reviewed Successfully!");
             this.$router.push("/order/finish");
           } else {
             mui.toast("Failed");
@@ -368,7 +368,7 @@ textarea::-webkit-input-placeholder {
 }
 .mui-icon-star-filled {
   color: #ffb400;
-  font-size: 22px;
+  font-size: 22px !important;
 }
 .mui-popover {
   height: 180px;
@@ -379,4 +379,6 @@ textarea::-webkit-input-placeholder {
 .mui-plus-stream .stream {
   display: block;
 }
+
+
 </style>

@@ -72,7 +72,7 @@
         </template>
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
           <p v-if="busy && loading"><span class="mui-spinner"></span></p>
-          <p v-if="!loading">No More Order</p>
+          <p v-if="!loading">End Of Order</p>
         </div>
 			</ul>
 		</div>
@@ -104,8 +104,8 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("access_token")
         }
       };
-      let btnArray = ["否", "是"];
-      mui.prompt("确认取消并退款？", "取消原因", "取消退款", btnArray, e => {
+      let btnArray = ["No", "Yes"];
+      mui.prompt("Are you sure to get refund (If canceled within 24 hours, refund half)？", "Cancel Reason", "Cancel Order", btnArray, e => {
         if (e.index == 1) {
           axios
             .post(
@@ -119,14 +119,14 @@ export default {
             .then(response => {
               console.log(response);
               if (response.data.success == true) {
-                mui.toast("Canceld the Order Successfully. Wait for refund.");
+                mui.toast("Canceled the Order Successfully. Wait for Refund.");
                 this.$router.push('/order/finish');
               } else {
-                mui.toast("修改时间失败");
+                mui.toast("Canceled Failed! Please Try Again or Later!");
               }
             })
             .catch(error => {
-              mui.toast("修改时间失败");
+              mui.toast("Canceled Failed! Please Try Again or Later!");
               console.log(error.response);
             });
           
@@ -169,11 +169,11 @@ export default {
             this.changed_order = null;
             mui.toast("Changed the Time. Waiting for Response.");
           } else {
-            mui.toast("修改时间失败");
+            mui.toast("Changed Failed! Please Try Again or Later!");
           }
         })
         .catch(error => {
-          mui.toast("修改时间失败");
+          mui.toast("Changed Failed! Please Try Again or Later!");
           console.log(error.response);
         });
     },

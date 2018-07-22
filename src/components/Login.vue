@@ -72,16 +72,17 @@ export default {
               .then(response => {
                 console.log(response);
                 if (response.data.success == true) {
-                  console.log(response);
+                  
                   localStorage.setItem("access_token", response.data.token);
                   localStorage.setItem(
                     "user",
                     JSON.stringify(response.data.user)
                   );
+                localStorage.setItem("saved_cleaners", JSON.stringify(response.data.saved_cleaners));
                   mui.toast("Login Successfully!");
                   this.$router.replace("service");
                 } else {
-                  mui.toast("注册失败，请稍后再试");
+                  mui.toast("Login Failed! Please Contact Us!");
                 }
               })
               .catch(error => {
@@ -152,10 +153,11 @@ export default {
                   "user",
                   JSON.stringify(response.data.user)
                 );
+                localStorage.setItem("saved_cleaners", JSON.stringify(response.data.saved_cleaners));
                 mui.toast("Login Successfully!");
                 this.$router.replace("service");
               } else {
-                mui.toast("注册失败，请稍后再试");
+                mui.toast("Login Failed, Please Try Again!");
               }
             })
             .catch(error => {

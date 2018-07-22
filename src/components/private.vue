@@ -55,60 +55,7 @@ export default {
     },
   },
   methods: {
-    signUp: function() {
-      
-      if (this.phone.length!=10){
-        mui.toast("Phone Number is not Correct!");
-        return;
-      }
-      if (this.password != this.repassword){
-        mui.toast("Passwords are not matched!");
-        return;
-      }
-      this.loading = true;
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(
-          user => {
-            axios
-              .post(
-                "http://foreclean.tk:8000/api/getAccessCode",
-                JSON.stringify({
-                  name: this.email.split("@")[0],
-                  phone: this.phone,
-                  email: this.email,
-                  uid: user.uid,
-                  source: 1
-                })
-              )
-              .then(response => {
-                console.log(response);
-                if (response.data.success == true) {
-                  console.log(response);
-                  localStorage.setItem("access_token", response.data.token);
-                  localStorage.setItem(
-                    "user",
-                    JSON.stringify(response.data.user)
-                  );
-                  mui.toast("Login Successfully!");
-                  this.$router.replace("service");
-                } else {
-                  mui.toast("注册失败，请稍后再试");
-                }
-                this.loading = false;
-              })
-              .catch(error => {
-                this.loading = false;
-                console.log(error.response);
-              });
-          },
-          err => {
-            alert("Oops. " + err.message);
-            this.loading = false;
-          }
-        );
-    }
+
   }
 };
 </script>

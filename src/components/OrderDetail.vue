@@ -19,7 +19,7 @@
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-12 mui-text-left">
 		                    <h4 class="mui-ellipsis" style="white-space:initial">{{order.address}}</h4>
-                        <h5 style="font-weight:bold;color:#EB482F ">Status: {{getOrderStatus(order.order_status)}}{{order.order_status}}</h5>
+                        <h5 style="font-weight:bold;color:#EB482F ">Status: {{getOrderStatus(order.order_status)}}</h5>
 		                    <h5 style="font-weight:bold">Booked Time: {{order.time.replace("T", " ").split(".")[0]}} + <span style="color:red"> {{order.hours}} Hours</span></h5>
                         <h5 style="font-weight:bold">Created Time: {{order.created_at}}</h5>
 		                    <p class="mui-h6 mui-ellipsis">
@@ -28,6 +28,7 @@
                           <template v-for="additional of order.additional">
                                 <div style="font-size:15px"><i class="fas fa-check-circle"></i>    {{getAdditionalName(additional)}}</div>
                           </template>
+                          <div  v-if="order.notes!=''" style="font-size:15px;font-weight:bold" class="mui-h6">Other Requests: <h4 class="mui-ellipsis" style="font-size:15px !important;white-space:initial">{{order.notes}}</h4></div>
                         </p>
 		                </div>
 		                <!-- <div class="mui-table-cell mui-col-xs-2 mui-text-right">
@@ -44,9 +45,9 @@
                 <!-- <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button> -->
                 <h5 class="mui-pull-right"></h5>
                 <div class="mui-media-body">
-                  <span data-v-7e957575="" style="position: absolute; right: 10px; top: 15px;">
-                    <button v-if="!1" type="button" style="padding:2px;width:auto" class="mui-btn mui-btn-warning" >Save</button>
-                    <button v-if="1" type="button" style="padding:2px;width:auto" class="mui-btn mui-btn-success" >Saved</button> 
+                  <span v-if="order.order_status==6" style="position: absolute; right: 10px; top: 15px;">
+                    <button v-if="cleaner_list.indexOf(order.cleaner_id)<0" type="button"  @click="saveOrUnsave(order.cleaner_id)" style="padding:2px;width:auto" class="mui-btn mui-btn-warning" >Save</button>
+                    <button v-if="cleaner_list.indexOf(order.cleaner_id)>-1" type="button" @click="saveOrUnsave(order.cleaner_id)" style="padding:2px;width:auto" class="mui-btn mui-btn-success" >Saved</button> 
                   </span>
                   <h4 class='mui-ellipsis' style="text-align:left">{{cleaner.name}}&nbsp;
                     <template v-for="i in cleaner.rate">
@@ -80,6 +81,7 @@
             </div>
           </template>
         </ul>
+
         <h5 class="font-bold">*Fee Details</h5>
 		    <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
 		        <li class="mui-table-view-cell">
@@ -106,19 +108,49 @@
 		            </div>
 		        </li>
 		    </ul>
-        <h5 v-if="order.review_status == 1" class="">*Comment</h5>
+        <h5 v-if="order.review_status == 1 && review" class="">*Comment To Cleaner</h5>
 		    <ul v-if="order.review_status == 1 && review" class="mui-table-view mui-table-view-striped mui-table-view-condensed">
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-12 mui-text-left">
 		                    <h5 class="mui-ellipsis">{{review.comments}}</h5>
-                      
+                        <div v-if="JSON.parse(review.images).length>0" class="weui-uploader" style="padding: 10px;">
+                          <div class="weui-uploader__bd">
+                              <ul class="weui-uploader__files" id="uploaderFiles">
+                                <template v-for="image of JSON.parse(review.images)"> 
+                                  <li  @click="showImage(image,JSON.parse(review.images))" class="weui-uploader__file" :style="'background-image:url('+image+')'"></li>
+                                </template>
+                              </ul>
+                          </div>
+                      </div>
+		                </div>
+		            </div>
+		        </li>
+		    </ul>
+        <h5 v-if="reviewToMe.length >0" class="">*Comment To Me</h5>
+		    <ul v-if="reviewToMe.length >0 && reviewToMe" class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+		        <li class="mui-table-view-cell">
+		            <div class="mui-table">
+		                <div class="mui-table-cell mui-col-xs-12 mui-text-left">
+		                    <h5 class="mui-ellipsis">{{reviewToMe[0].comments}}</h5>
 		                </div>
 		            </div>
 		        </li>
 		    </ul>
 			</div>
 		</div>
+    <div class="weui-gallery" v-if="selected_image" style="display:block">
+      <span class="weui-gallery__img"  @click="closeImage()" :style="'background-image: url('+selected_image+');height: 100vh;'"></span>
+      <a href="javascript:" class="weui-gallery__del"   @click="PrevImage()" style="width:50px;left:0;height:100vh;position:absolute;z-index:1000">
+        <i style="position:absolute;top:50vh;left:5px;    font-size: 30px;color:#eb482f" class="fas fa-chevron-circle-left"></i>
+      </a>
+      <a href="javascript:" class="weui-gallery__del" @click="NextImage()" style="width:50px;right:0;height:100vh;position:absolute;z-index:1000">
+        <i style="position:absolute;top:50vh;right: 5px;    font-size: 30px;color:#eb482f" class="fas fa-chevron-circle-right" ></i>
+      </a>
+      <div class="weui-gallery__opr">
+
+			</div>
+    </div>
 	</body>
 </template>
 
@@ -138,10 +170,15 @@ export default {
       cleaner: null,
       loading: false,
       pendding_cleaners: [],
-      review: null
+      review: null,
+      selected_image: null,
+      ga_images: [],
+      cleaner_list: [],
+      reviewToMe: []
     };
   },
   created() {
+    this.cleaner_list = JSON.parse(localStorage.getItem("saved_cleaners"));
     if (!this.$route.params.order) {
       this.$router.push("/order");
     }
@@ -157,7 +194,7 @@ export default {
       axios
         .post(
           "http://foreclean.tk:8000/api/getCleanerList",
-          JSON.stringify({ cleaner_id: this.order.cleaner_id }),
+          JSON.stringify({ cleaner_id: this.order.cleaner_id })
         )
         .then(response => {
           console.log(response);
@@ -209,9 +246,96 @@ export default {
           console.log(error.response);
         });
     }
+    if (this.order.order_status >5) {
+      axios
+        .post(
+          "http://foreclean.tk:8000/api/getReviewForClientwithOrder",
+          JSON.stringify({ order_id: this.order.id }),
+          config
+        )
+        .then(response => {
+          console.log(response);
+          if (response.data.success == true) {
+            this.reviewToMe = response.data.reviews;
+          } else {
+            mui.toast(response.data.error);
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+        });
+    }
   },
   methods: {
-    pay() {}
+    NextImage: function() {
+      let index = this.ga_images.indexOf(this.selected_image);
+      if (index < this.ga_images.length - 1) {
+        this.selected_image = this.ga_images[index + 1];
+      }
+    },
+    PrevImage: function() {
+      let index = this.ga_images.indexOf(this.selected_image);
+      if (index > 0) {
+        this.selected_image = this.ga_images[index - 1];
+      }
+    },
+    showImage: function(selected_image, ga_images) {
+      this.selected_image = selected_image;
+      this.ga_images = ga_images;
+      document
+        .querySelector('meta[name="viewport"]')
+        .setAttribute(
+          "content",
+          "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=2"
+        );
+    },
+    closeImage: function() {
+      this.selected_image = null;
+      this.ga_images = [];
+      document
+        .querySelector('meta[name="viewport"]')
+        .setAttribute(
+          "content",
+          "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+        );
+    },
+    saveOrUnsave() {
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token")
+        }
+      };
+      axios
+        .post(
+          "http://foreclean.tk:8000/api/saveOrUnsaveCleaner",
+          JSON.stringify({
+            cleaner_id: this.order.cleaner_id
+          }),
+          config
+        )
+        .then(response => {
+          if (response.data.success == true) {
+            console.log(response.data);
+            if (response.data.message == "saved") {
+              this.cleaner_list.push(this.order.cleaner_id);
+            } else {
+              this.cleaner_list.splice(
+                this.cleaner_list.indexOf(this.order.cleaner_id),
+                1
+              );
+            }
+            localStorage.setItem(
+              "saved_cleaners",
+              JSON.stringify(this.cleaner_list)
+            );
+          } else {
+            mui.toast(response.data.error);
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+        });
+    }
   }
 };
 </script>

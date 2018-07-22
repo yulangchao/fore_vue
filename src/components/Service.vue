@@ -26,7 +26,7 @@
 			<ul class="mui-table-view  mui-text-center">
 					<div class="mui-card">
 						<router-link :to="{ name: 'ServiceForm', params: { order_type: 1, others: getAdditionals(1) }}">
-							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/QGX5vpdWrTS24uVgVcuh.png)"></div>
+							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://foreclean.tk:8000/storage/files/May2018/QGX5vpdWrTS24uVgVcuh.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
 									<h3>AIRBNB Cleaning</h3>
@@ -36,7 +36,7 @@
 					</div>
 					<div class="mui-card">
 						<router-link :to="{ name: 'ServiceForm', params: { order_type: 2, others: getAdditionals(2) }}">
-							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/F87bJWudFFzD5ITZn2Lk.png)"></div>
+							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://foreclean.tk:8000/storage/files/May2018/F87bJWudFFzD5ITZn2Lk.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
 									<h3>Home Cleaning</h3>
@@ -46,7 +46,7 @@
 					</div>
 					<div class="mui-card">
 						<router-link :to="{ name: 'ServiceForm', params: { order_type: 3, others: getAdditionals(3) }}">
-							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://35.233.164.144:8000/storage/files/May2018/i1pfxjezYz9dV3pqJYNp.png)"></div>
+							<div class="mui-card-header mui-card-media" style="height:150px;background-image:url(http://foreclean.tk:8000/storage/files/May2018/i1pfxjezYz9dV3pqJYNp.png)"></div>
 							<div class="mui-card-content">
 								<div class="mui-card-content-inner">
 									<h3>Moving Cleaning</h3>
@@ -77,14 +77,6 @@ export default {
   },
   mounted() {},
   methods: {
-    logout: function() {
-      localStorage.removeItem("user");
-      mui.toast("退出成功");
-      this.$router.replace("login");
-    },
-    redirect: function() {
-      this.$router.replace("hello");
-    }
   }
 };
 </script>
