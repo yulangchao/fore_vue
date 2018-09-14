@@ -16,7 +16,7 @@
 
 			</div>
     </div>
-		<div class="mui-content" style="margin-bottom:50px;">
+		<div class="mui-content" style="padding-bottom:50px;">
       <ul v-if="cleaner" class="mui-table-view mui-table-view-chevron" style="margin-top:0px">
         <li class="mui-table-view-cell mui-media">
           <a class="" href="#account">
@@ -119,7 +119,7 @@ export default {
           JSON.stringify({ cleaner_id: this.$route.params.cleaner_id })
         )
         .then(response => {
-          console.log(response);
+          
           if (response.data.success == true) {
             this.cleaner = response.data.cleaners[0];
           } else {
@@ -127,7 +127,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response);
+          
         });
     } else {
       if (!this.$route.params.cleaner) {
@@ -193,7 +193,7 @@ export default {
             })
           )
           .then(response => {
-            console.log(response);
+            
             if (response.data.success == true) {
               this.page++;
               this.data = this.data.concat(response.data.reviews);
@@ -208,7 +208,7 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error.response);
+            
           });
       }, 0);
     }

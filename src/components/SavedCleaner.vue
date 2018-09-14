@@ -84,7 +84,7 @@ export default {
         )
         .then(response => {
           if (response.data.success == true) {
-            console.log(response.data);
+            
             if (response.data.message == "saved") {
               this.cleaner_list.push(id);
             } else {
@@ -106,7 +106,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response);
+          
         });
     },
     loadMore: function() {
@@ -120,7 +120,7 @@ export default {
             })
           )
           .then(response => {
-            console.log(response);
+            
             if (response.data.success == true) {
               this.page++;
               this.data = this.data.concat(response.data.cleaners);
@@ -136,7 +136,7 @@ export default {
             this.lock = false;
           })
           .catch(error => {
-            console.log(error.response);
+            
             this.lock = false;
           });
       }

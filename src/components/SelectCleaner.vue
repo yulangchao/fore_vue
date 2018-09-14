@@ -203,7 +203,7 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener("backbutton", () => {
-      console.log("deleted");
+      
     });
   },
   methods: {
@@ -250,7 +250,7 @@ export default {
               config
             )
             .then(response => {
-              console.log(response);
+              
               if (response.data.success == true) {
                 mui.toast("Created order and wait for responses from cleaners!");
                 this.$router.push("/order");
@@ -262,7 +262,7 @@ export default {
             .catch(error => {
               mui.toast("Created failed, Please Contact us or try later!");
               this.loading_spin = false;
-              console.log(error.response);
+              
             });
         } else {
         }
@@ -313,7 +313,7 @@ export default {
             config
           )
           .then(response => {
-            console.log(response);
+            
             if (response.data.success == true) {
               mui.toast("Created order and wait for responses from cleaners!");
               this.$router.push("/order");
@@ -325,7 +325,7 @@ export default {
           .catch(error => {
             mui.toast("Created failed, Please Contact us or try later!");
             this.loading_spin = false;
-            console.log(error.response);
+            
           });
       }, 0);
     },
@@ -354,7 +354,7 @@ export default {
       }
     },
     loadReview: function() {
-      console.log(this.cleaner.id);
+      
       axios
         .post(
           "http://foreclean.tk:8000/api/getReviewForCleaner",
@@ -364,7 +364,7 @@ export default {
           })
         )
         .then(response => {
-          console.log(response);
+          
           if (response.data.success == true) {
             this.cleaner_review = this.cleaner_review.concat(
               response.data.reviews
@@ -374,7 +374,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response);
+          
         });
     },
     loadMore: function() {
@@ -397,6 +397,10 @@ export default {
         position: this.order.position
       };
 
+      if (data.day == 0){
+        data.day = 7;
+      }
+      
       setTimeout(() => {
         axios
           .post(
@@ -418,7 +422,7 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error.response);
+            
           });
       }, 0);
     }

@@ -69,7 +69,7 @@ export default {
       this.$router.push("/setting");
     }
     this.user = this.$route.params.user;
-    console.log(this.user);
+    
   },
   watch: {
     phone: function(val) {
@@ -105,7 +105,7 @@ export default {
           config
         )
         .then(response => {
-          console.log(response);
+          
           if (response.data.success == true) {
             mui.toast("Update Successfullu!");
             localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -116,7 +116,7 @@ export default {
         })
         .catch(error => {
           mui.toast("Failed");
-          console.log(error.response);
+          
         });
     },
     filesChange: function(e) {
@@ -131,9 +131,9 @@ export default {
           .put(file)
           .then(snapshot => {
             if (this.images.length < 5) {
-              console.log("Uploaded a blob or file!");
+              
               this.images.push(snapshot.metadata.downloadURLs[0]);
-              console.log(snapshot.metadata.downloadURLs[0]);
+              
             }
             this.loading = false;
           });

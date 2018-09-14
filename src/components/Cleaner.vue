@@ -35,10 +35,9 @@
 				</select>
         <select v-model="price" @change="refresh()" style="border-left: 1px solid grey !important;border-radius: 0px;padding:10px;" class="mui-btn mui-btn-block">
 					<option value="0">All Prices</option>
-					<option value="1">$10-$15</option>
-					<option value="2">$15-$20</option>
-					<option value="3">$20-$25</option>
-          <option value="4">$25-$30</option>
+					<option value="1">$18-$22</option>
+					<option value="2">$22-$26</option>
+          <option value="3">$26-$30</option>
 				</select>
 				</div>
 			</div>
@@ -134,7 +133,7 @@ export default {
             })
           )
           .then(response => {
-            console.log(response);
+            
             if (response.data.success == true) {
               this.page++;
               this.data = this.data.concat(response.data.cleaners);
@@ -150,7 +149,7 @@ export default {
             this.lock = false;
           })
           .catch(error => {
-            console.log(error.response);
+            
             this.lock = false;
           });
       }
@@ -183,5 +182,9 @@ export default {
 }
 .mui-android .mui-modal .mui-bar {
   position: absolute !important;
+}
+
+.mui-bar-nav ~ .mui-content {
+  padding-top: 0px !important;
 }
 </style>

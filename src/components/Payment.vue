@@ -113,9 +113,7 @@ export default {
       this.$router.push("/order");
     }
     this.order = this.$route.params.order;
-    console.log(this.order.additional);
-    // this.order.additional = this.order.additional.substring(1, this.order.additional.length-1).split(',');
-    console.log(this.order);
+
   },
   mounted() {
     if(1){
@@ -125,7 +123,7 @@ export default {
           JSON.stringify({ cleaner_id: this.order.cleaner_id })
         )
         .then(response => {
-          console.log(response);
+          
           if (response.data.success == true) {
             this.cleaner = response.data.cleaners[0];
           } else {
@@ -133,7 +131,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response);
+          
         });
     }
   },
@@ -151,7 +149,7 @@ export default {
         }
       };
       createToken().then(data => {
-        console.log(data.token);
+        
         axios
           .post(
             "http://foreclean.tk:8000/api/postPayment",
@@ -159,7 +157,7 @@ export default {
             config
           )
           .then(response => {
-            console.log(response);
+            
             if (response.data.success == true) {
               mui.toast(response.data.message);
               this.loading = false;
@@ -170,7 +168,7 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error.response);
+            
           });
       });
     }

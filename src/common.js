@@ -17,7 +17,7 @@ let common = function(Vue, options) {
   };
   Vue.prototype.getTimeFromMinutes = function(time) {
     let min = time % 60;
-    console.log(min);
+    
     let hour = Math.floor(time / 60);
     if (min < 10) {
       min = "0" + min;
@@ -26,6 +26,15 @@ let common = function(Vue, options) {
       hour = "0" + hour;
     }
     return hour + ":" + min;
+  };
+  Vue.prototype.getHourFromString = function(time) {
+    let hour = time.substring(11, 13);
+    if (hour[0] == 0){
+      return hour[1];
+    }else{
+      return hour;
+    }
+    
   };
   Vue.prototype.getOrderStatus = function(status) {
     let status_name = "";

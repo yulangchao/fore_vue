@@ -83,9 +83,9 @@ export default {
                 })
               )
               .then(response => {
-                console.log(response);
+                
                 if (response.data.success == true) {
-                  console.log(response);
+                  
                   localStorage.setItem("access_token", response.data.token);
                   localStorage.setItem(
                     "user",
@@ -101,7 +101,7 @@ export default {
               .catch(error => {
                 this.loading = false;
                 mui.toast("Register Failed!");
-                console.log(error.response);
+                
               });
           },
           err => {

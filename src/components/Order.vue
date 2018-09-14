@@ -23,14 +23,32 @@
 			</router-link>
 		</nav>
 		<div class="mui-content">
-        <div style="padding: 10px 10px;">
-				<div id="segmentedControl" class="mui-segmented-control">
-                    <router-link to="/order" class="mui-control-item mui-active">Unpaid</router-link> 
-					<router-link to="/order/book" class="mui-control-item">Booked</router-link>  
-                    <router-link to="/order/inservice" class="mui-control-item">Serving</router-link>
-					<router-link to="/order/finish" class="mui-control-item">Finished</router-link>
-				</div>
-		</div>
+          <mt-swipe :auto="4000" style="height:160px">
+            <mt-swipe-item><img  style="width:100%;height:100%" src="http://www.17sucai.com/preview/1268063/2018-08-30/allList/images/banner-002.png"></mt-swipe-item>
+          <mt-swipe-item><img  style="width:100%;height:100%" src="http://www.17sucai.com/preview/1268063/2018-08-30/allList/images/banner-004.png"></mt-swipe-item>
+          </mt-swipe>
+          <ul class="tab-nav">    
+            <li class="tab-nav-item tab-active">
+                <router-link to="/order">
+                    <span>Unpaid</span>
+                </router-link>
+            </li>
+            <li class="tab-nav-item">
+                <router-link to="/order/book">
+                    <span>Booked</span>
+                </router-link>
+            </li>
+            <li class="tab-nav-item">
+                <router-link to="/order/inservice" href="javascript:;">
+                    <span>Serving</span>
+                </router-link>
+            </li>
+            <li class="tab-nav-item">
+                <router-link to="/order/finish" href="javascript:;">
+                    <span>Finished</span>
+                </router-link>
+            </li>
+        </ul>
     <mt-loadmore :top-method="loadTop" ref="loadmore" @top-status-change="handleTopChange">
 
 
@@ -44,14 +62,14 @@
               <button class="mui-btn mui-btn-danger" style="padding: 3px 10px;top: 95px;right: 10px;" @click="cancelOrder(da)">
                 Cancel
               </button>
-              <h5 class="mui-pull-right">${{da.price+da.agent_fee}}</h5>
+              <h5 class="mui-pull-right"><template v-if="da.price >0">${{da.price+da.agent_fee}}</template></h5>
               <router-link :to="{ name: 'OrderDetail', params: { order: da}}"  class="mui-media-body">
                 <h4 class='mui-ellipsis' style="text-align:left;margin:0px;padding:5px 0px;">{{getOrderType(da.order_type)}}&nbsp;&nbsp;
                   <button class="order_status" :style="da.order_status== 1 ?'background:#64d573':'background:#ea5a12'">{{da.order_status== 1 ?"Pending":"Unpaid"}}</button>
                   <button v-if="da.order_status== 2" class="order_status" style="background:#64d573">Arranged</button>
                   <button v-if="da.cleaner_id== 6" class="order_status" style="background:gold">VIP</button>
                 </h4>
-                <p class='mui-ellipsis' style="text-align:left"><i class="fas fa-phone"></i>:{{da.phone}}  <span style="color:red"><i class="fas fa-clock"></i>:{{da.time}}</span></p>
+                <p class='mui-ellipsis' style="text-align:left"> <span style="color:red">Scheduled Time: {{da.time}}</span></p>
                 <p class='mui-ellipsis address'>{{da.address.substring(0,60)}}&nbsp;</p>
               </router-link>
             </a>
@@ -119,7 +137,7 @@ export default {
               config
             )
             .then(response => {
-              console.log(response);
+              
               if (response.data.success == true) {
                 mui.toast("Canceld the Order Successfully.");
                 this.$router.push("/order/finish");
@@ -129,7 +147,7 @@ export default {
             })
             .catch(error => {
               mui.toast("修改时间失败");
-              console.log(error.response);
+              
             });
         }
       });
@@ -155,7 +173,7 @@ export default {
             config
           )
           .then(response => {
-            console.log(response);
+            
             if (response.data.success == true) {
               this.page++;
               this.data = this.data.concat(response.data.orders);
@@ -171,7 +189,7 @@ export default {
           })
           .catch(error => {
             mui.toast("Getting Data Failed!");
-            console.log(error.response);
+            
           });
       }, 0);
     }
@@ -196,5 +214,8 @@ export default {
   white-space: pre-line;
   text-align: left;
   height: 42px;
+}
+.mui-bar-nav ~ .mui-content {
+  padding-top: 0px !important;
 }
 </style>

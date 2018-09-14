@@ -135,4 +135,7 @@ oa-contact-position {
 .mui-table-view {
   padding-bottom: 20px;
 }
+.mui-bar-nav ~ .mui-content {
+  padding-top: 2px !important;
+}
 </style>

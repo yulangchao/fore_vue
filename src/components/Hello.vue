@@ -23,7 +23,7 @@
 			</a>
 		</nav>
 		<div class="mui-content">
-      <div style="padding: 10px 10px;">
+      <div style="padding: 1px 0px;">
 				<div id="segmentedControl" class="mui-segmented-control">
 					<a class="mui-control-item mui-active" href="#item1">待办公文（8）</a>
 					<a class="mui-control-item" href="#item2">已办公文</a>
@@ -84,7 +84,7 @@ export default {
             })
           )
           .then(response => {
-            console.log(response);
+            
             if (response.data.success == true) {
               this.page++;
               this.data = this.data.concat(response.data.orders);
@@ -99,7 +99,7 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error.response);
+            
           });
       }, 0);
     }

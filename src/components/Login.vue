@@ -49,7 +49,11 @@ export default {
       loading: false
     };
   },
+  created(){
+
+  },
   methods: {
+
     signIn: function() {
       this.loading = true;
 
@@ -70,15 +74,16 @@ export default {
                 })
               )
               .then(response => {
-                console.log(response);
                 if (response.data.success == true) {
-                  
                   localStorage.setItem("access_token", response.data.token);
                   localStorage.setItem(
                     "user",
                     JSON.stringify(response.data.user)
                   );
-                localStorage.setItem("saved_cleaners", JSON.stringify(response.data.saved_cleaners));
+                  localStorage.setItem(
+                    "saved_cleaners",
+                    JSON.stringify(response.data.saved_cleaners)
+                  );
                   mui.toast("Login Successfully!");
                   this.$router.replace("service");
                 } else {
@@ -87,7 +92,6 @@ export default {
               })
               .catch(error => {
                 this.loading = false;
-                console.log(error.response);
               });
           },
           err => {
@@ -103,7 +107,7 @@ export default {
         "Email",
         "Forget Password",
         btnArray,
-        (e) => {
+        e => {
           if (e.index == 1) {
             firebase
               .auth()
@@ -115,7 +119,6 @@ export default {
                 // Error occurred. Inspect error.code.
               });
           } else {
-
           }
         }
       );
@@ -145,15 +148,16 @@ export default {
               })
             )
             .then(response => {
-              console.log(response);
               if (response.data.success == true) {
-                console.log(response);
                 localStorage.setItem("access_token", response.data.token);
                 localStorage.setItem(
                   "user",
                   JSON.stringify(response.data.user)
                 );
-                localStorage.setItem("saved_cleaners", JSON.stringify(response.data.saved_cleaners));
+                localStorage.setItem(
+                  "saved_cleaners",
+                  JSON.stringify(response.data.saved_cleaners)
+                );
                 mui.toast("Login Successfully!");
                 this.$router.replace("service");
               } else {
@@ -163,11 +167,10 @@ export default {
             .catch(error => {
               this.loading = false;
               alert(error.response);
-              console.log(error.response);
             });
           // ...
         })
-        .catch((error) => {
+        .catch(error => {
           this.loading = false;
           alert(error);
           // Handle Errors here.

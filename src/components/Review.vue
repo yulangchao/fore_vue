@@ -68,14 +68,11 @@
 			</ul>
 
 			<div class="mui-content-padded">
-				<div class="mui-inline">Comments:</div>
+				<h5 class="mui-inline">Comments:</h5>
 
 			</div>
-			<div class="row mui-input-row">
-				<textarea id='question' v-model="comments" class="mui-input-clear question" placeholder="Please Give a Comment"></textarea>
-			</div>
 			<div class="mui-content-padded" style="margin-left: 6px;">
-				<div class="mui-inline">Rate:</div>
+				<h5 class="mui-inline">Rate:</h5>
 				<div class="icons mui-inline" style="margin-left: 6px;">
 					<i data-index="1" class="mui-icon mui-icon-star"></i>
 					<i data-index="2" class="mui-icon mui-icon-star"></i>
@@ -84,6 +81,11 @@
 					<i data-index="5" class="mui-icon mui-icon-star"></i>
 				</div>
 			</div>
+
+			<div class="row mui-input-row">
+				<textarea id='question' v-model="comments" class="mui-input-clear question" placeholder="Please Give a Comment"></textarea>
+			</div>
+
       
 			<div class="weui-gallery" v-if="selected_image" style="display:block">
 				<span class="weui-gallery__img"  @click="selected_image=null" :style="'background-image: url('+selected_image+')'"></span>
@@ -93,7 +95,7 @@
 						</a>
 				</div>
 			</div>
-			<div class="weui-uploader" style="padding: 10px;margin-bottom: 100px;">
+			<div class="weui-uploader" style="padding: 10px;padding-bottom: 100px;">
 					<div class="weui-uploader__hd">
 							<p class="weui-uploader__title">Image Upload</p>
 							<div class="weui-uploader__info">{{images.length}}/5</div>
@@ -148,7 +150,7 @@ export default {
         JSON.stringify({ cleaner_id: this.order.cleaner_id })
       )
       .then(response => {
-        console.log(response);
+        
         if (response.data.success == true) {
           this.cleaner = response.data.cleaners[0];
         } else {
@@ -156,7 +158,7 @@ export default {
         }
       })
       .catch(error => {
-        console.log(error.response);
+        
       });
     mui(".icons").on("tap", "i", e => {
       var index = parseInt(e.target.getAttribute("data-index"));
@@ -197,17 +199,17 @@ export default {
           .put(file)
           .then(snapshot => {
             if (this.images.length < 5) {
-              console.log("Uploaded a blob or file!");
+              
               this.images.push(snapshot.metadata.downloadURLs[0]);
-              console.log(snapshot.metadata.downloadURLs[0]);
+              
             }
             this.loading = false;
           });
       }
-      console.log(this.images);
+      
     },
     sendReview: function() {
-      console.log(this.rate);
+     
       let config = {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("access_token")
@@ -227,7 +229,7 @@ export default {
           config
         )
         .then(response => {
-          console.log(response);
+          
           if (response.data.success == true) {
             mui.toast("Reviewed Successfully!");
             this.$router.push("/order/finish");
@@ -237,7 +239,7 @@ export default {
         })
         .catch(error => {
           mui.toast("Failed");
-          console.log(error.response);
+          
         });
     }
   }

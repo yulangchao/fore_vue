@@ -15,11 +15,11 @@
 						</a>
 			</div>
     </div>
-		<div class="mui-content" style="margin-bottom:50px;">
+		<div class="mui-content" style="padding-bottom:50px;">
       <ul v-if="user" class="mui-table-view mui-table-view-chevron" style="margin-top:0px">
         <li class="mui-table-view-cell mui-media">
           <a class="" href="#account">
-            <img class="mui-media-object mui-pull-left head-img"  style="border-radius: 100%" id="head-img" v-lazy="user.avatar == null ?url() : user.avatar ">
+            <img class="mui-media-object mui-pull-left head-img"  style="border-radius: 100%;width:79px" id="head-img" v-lazy="user.avatar == null ?url() : user.avatar ">
             <div class="mui-media-body" style="text-align:left">
               <h4>{{user.name}}              
                 <template v-for="i in user.rate">
@@ -53,7 +53,7 @@
                 <p class='mui-ellipsis' style="text-align: left;white-space: pre-line;word-wrap: break-word;">{{review.comments}}</p>
               </div>
 
-          		<div v-if="review.images !=null && JSON.parse(review.images).length>0" class="weui-uploader" style="padding: 10px;">
+          		<!-- <div v-if="review.images !=null && JSON.parse(review.images).length>0" class="weui-uploader" style="padding: 10px;">
                 <div class="weui-uploader__bd">
                     <ul class="weui-uploader__files" id="uploaderFiles">
                       <template v-for="image of JSON.parse(review.images)"> 
@@ -61,7 +61,7 @@
                       </template>
                     </ul>
                 </div>
-            </div>
+            </div> -->
           </div>
         </template>
         
@@ -145,7 +145,7 @@ export default {
             })
           )
           .then(response => {
-            console.log(response);
+            
             if (response.data.success == true) {
               this.page++;
               this.data = this.data.concat(response.data.reviews);
@@ -160,7 +160,7 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error.response);
+            
           });
       }, 0);
     }

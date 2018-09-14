@@ -23,12 +23,32 @@
 						</div>
 					</div>
 
+
+
 					<div class="weui-cell">
+						<div class="weui-cell__hd"><label for="" class="weui-label">Time</label></div>
+						<div class="weui-cell__bd">
+							<datetime
+                  type="datetime"
+                  v-model="time"
+                  input-class="time-select"
+                  :format="{ year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }"
+                  :phrases="{ok: 'Continue', cancel: 'Exit'}"
+                  :minute-step="30"
+                  :week-start="7"
+                  :min-datetime="minDatetime"
+                  value-zone="America/Los_Angeles"
+                  format="yyyy-MM-dd HH:mm"
+                  ></datetime>
+						</div>
+					</div>
+
+					<!-- <div class="weui-cell">
 						<div class="weui-cell__hd"><label for="" class="weui-label">Time</label></div>
 						<div class="weui-cell__bd">
 							<input class="weui-input" type="datetime-local" :step="900" v-model="time"  placeholder="Time" />
 						</div>
-					</div>
+					</div> -->
 					<!-- <div class="weui-cell weui-cell_select weui-cell_select-after">
 						<div class="weui-cell__hd">
 							<label for="" class="weui-label">City</label>
@@ -110,19 +130,16 @@ export default {
       position: null,
       others: [],
       user: null,
-      notes: ""
+      notes: "",
+      minDatetime: new Date().toISOString()
     };
   },
   created() {
-    
-    this.user = JSON.parse(localStorage.getItem('user'));
+    this.user = JSON.parse(localStorage.getItem("user"));
     this.name = this.user.name;
-    this.phone = this.user.phone
-    this.min =  new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().substring(0,16);
-    this.time = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().substring(0,16);
+    this.phone = this.user.phone;
   },
   mounted() {
-    
     if (!this.$route.params.order_type) {
       mui.toast("Please create your order from the main page!");
       this.$router.push("/service");
@@ -130,11 +147,13 @@ export default {
     }
     this.others = this.$route.params.others;
     if (this.$route.params.order) {
-      console.log(this.$route.params.order);
-      let order = this.$route.params.order
+   
+      
+      let order = this.$route.params.order;
+
       this.phone = order.phone;
       this.name = order.name;
-      this.time = order.time.substring(0,16);
+      this.time = order.time.substring(0, 16);
       this.additional = order.additional;
       this.bathroom = order.bathroom;
       this.bedroom = order.bedroom;
@@ -165,46 +184,41 @@ export default {
     } else {
       this.title = "MOVING CLEANING";
     }
-    
-
   },
   methods: {
     createOrder: function() {
-
-
 
       let details = {
         order_type: this.$route.params.order_type,
         name: this.name,
         phone: this.phone,
-        time: this.time.substring(0,16),
+        time: this.time.substring(0, 16),
         city: this.city,
         address: this.address,
         bedroom: this.bedroom,
         bathroom: this.bathroom,
         additional: this.additional,
-        hours: this.getHour(this.$route.params.order_type,this.bedroom,this.additional),
+        hours: this.getHour(
+          this.$route.params.order_type,
+          this.bedroom,
+          this.additional
+        ),
         position: this.position,
         others: this.others,
         notes: this.notes
       };
-
-      let d = new Date(Date.parse(this.time + "Z"));
-      console.log(d.getTime(),new Date().getTime());
-      let hr = new Date(
-        Date.parse(this.time + "Z") + d.getTimezoneOffset() * 60000
-      ).getHours();
-      if (hr+details.hours >23 || hr < 8 || ((d.getTime()+ d.getTimezoneOffset() * 60000)<new Date().getTime())){
-
+      if (
+        this.getHourFromString(this.time) < 8 ||
+        this.getHourFromString(this.time) >= 23 - details.hours
+      ) {
         mui.toast("The Working time is between 8-23!");
         return;
       }
 
-
       if (!this.name) {
         mui.toast("Name is needed!");
         return;
-      } 
+      }
 
       if (this.phone.length != 10) {
         mui.toast("Phone Number is not Correct!");
@@ -222,7 +236,7 @@ export default {
         mui.toast("Address is needed!");
         return;
       }
-      console.log(details);
+      
       this.$router.push({ name: "SelectCleaner", params: { order: details } });
     },
     initAutocomplete: function() {
@@ -248,11 +262,13 @@ export default {
       google.maps.event.addListener(searchBox, "place_changed", () => {
         var place = searchBox.getPlace();
         this.address = place.formatted_address;
-        this.position = {lat:place.geometry.location.lat(),lng: place.geometry.location.lng()};
+        this.position = {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng()
+        };
         this.city = place.vicinity;
 
-        console.log(this.position);
-        console.log(place);
+
       });
     }
   }
@@ -287,10 +303,11 @@ select {
   margin-top: 0px;
 }
 .rooms-num label {
-    width: 50%;
-    
+  width: 50%;
 }
 .mui-input-row label {
-    text-align: left
+  text-align: left;
 }
+
+
 </style>
