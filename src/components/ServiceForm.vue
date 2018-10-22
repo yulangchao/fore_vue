@@ -62,12 +62,13 @@
 					</div> -->
 
 					<div class="weui-cell">
+            <div class="weui-cell__hd"><label for="" class="weui-label">Location</label></div>
 						<div class="weui-cell__bd">
 							<input class="weui-input" v-model="address" type="text" id="customer_address"/>
 						</div>
 					</div>
 				</div>
-				<div class="weui-cells__title">Beds and Baths</div>
+				<div class="weui-cells__title">Tell us about your place</div>
 
 				<div class="weui-cells">
 					<div class="mui-input-row">
@@ -89,7 +90,7 @@
           <div class="weui-cells weui-cells_checkbox">
               <template v-for="addition in others">
                               <div class="mui-input-row mui-checkbox ">
-                                  <label>{{getAdditionalName(addition)}}</label>
+                                  <label>{{getAdditionalName(addition)}} <span style="float:right">+0.5 Hours</span></label>
                                   <input v-model="additional" type="checkbox" :value="addition">
                               </div>
               </template>
@@ -105,7 +106,7 @@
 		</div>
 		<nav class="mui-bar mui-bar-tab">
 				
-					<a class="weui-btn weui-btn_primary" @click="createOrder" type="submit" id="showTooltips">Next</a>
+					<a class="weui-btn weui-btn_primary" style="background-color: #fd5c63 !important;" @click="createOrder" type="submit" id="showTooltips">NEXT</a>
 				
 		</nav>
   </div>
@@ -209,9 +210,9 @@ export default {
       };
       if (
         this.getHourFromString(this.time) < 8 ||
-        this.getHourFromString(this.time) >= 23 - details.hours
+        this.getHourFromString(this.time) >= 22 - details.hours
       ) {
-        mui.toast("The Working time is between 8-23!");
+        mui.toast("The Working time is between 8-22!");
         return;
       }
 

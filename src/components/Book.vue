@@ -2,7 +2,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			
-			<h1  style="color:white" class="mui-title">Booked Order</h1>
+			<h1  style="color:white" class="mui-title">Order</h1>
 		</header>
     <div v-if="change_time" class="mui-popup mui-popup-in" style="display: block;width: 100vw;
     padding: 150px 50px;">
@@ -45,7 +45,7 @@
 				<span class="mui-tab-label">Settings</span>
 			</router-link>
 		</nav>
-		<div class="mui-content">
+		<div class="mui-content order-page">
           <mt-swipe :auto="4000" style="height:160px">
             <mt-swipe-item><img  style="width:100%;height:100%" src="http://www.17sucai.com/preview/1268063/2018-08-30/allList/images/banner-002.png"></mt-swipe-item>
           <mt-swipe-item><img  style="width:100%;height:100%" src="http://www.17sucai.com/preview/1268063/2018-08-30/allList/images/banner-004.png"></mt-swipe-item>

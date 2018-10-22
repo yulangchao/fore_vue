@@ -2,7 +2,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
       <a @click="navBack" class="mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 style="color:white" class="mui-title">Reviews To Me</h1>
+			<h1 style="color:white" class="mui-title">My Reviews</h1>
 		</header>
     <div class="weui-gallery" v-if="selected_image" style="display:block">
       <span class="weui-gallery__img"  @click="closeImage()" :style="'background-image: url('+selected_image+')'"></span>

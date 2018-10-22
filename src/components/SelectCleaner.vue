@@ -2,7 +2,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<router-link :to="{ name: 'ServiceForm', params: { order_type: order.order_type, order: order}}" class="mui-icon mui-icon-left-nav mui-pull-left"></router-link>
-			<h1  style="color:white" class="mui-title">Select at Most 3 Cleaners</h1>
+			<h1  style="color:white" class="mui-title">Select up to 3 Cleaners</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
         <a class="weui-btn weui-btn_primary"  type="submit" id="showTooltips" @click="createOrder">Create Order</a>
@@ -84,8 +84,9 @@
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-12 mui-text-left">
 		                    <h4 class="mui-ellipsis" style="white-space: initial;">{{order.address}}</h4>
-		                    <h5 style="font-weight:bold">Time: {{order.time.replace("T", " ").split(".")[0]}} + <span style="color:red"> {{order.hours}} Hours</span></h5>
-		                    <p class="mui-h6 mui-ellipsis">
+		                    <h5 style="font-weight:bold">Scheduled Time: {{order.time.replace("T", " ").split(".")[0]}} </h5>
+                        <h5 style="font-weight:bold">Service Hours:  <span style="color:red">{{order.hours}} Hours</span></h5>
+		                    <p class="mui-h6 mui-ellipsis" id="detail-button">
                           <button type="button" class="mui-btn mui-btn-primary">Bedroom <span class="mui-badge mui-badge-primary">{{order.bedroom}}</span></button>
                           &nbsp;<button type="button" class="mui-btn mui-btn-success">Bathroom <span class="mui-badge mui-badge-success">{{order.bathroom}}</span></button>
                           &nbsp;<button type="button" class="mui-btn mui-btn-warning">Others <span class="mui-badge mui-badge-warning">{{order.additional.length}}</span></button>
@@ -107,7 +108,7 @@
               <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button>
               <h5 class="mui-pull-right"></h5>
               <div class="mui-media-body" @click="view(premium_cleaner)">
-                <h4 class='mui-ellipsis' style="text-align:left">Fore&nbsp;
+                <h4 class='mui-ellipsis' style="text-align:left">WiiCleaner&nbsp;
                   <template v-for="i in 5">
                       <i data-index="1" style="color: goldenrod;" class="mui-icon mui-icon-star-filled"></i>
                   </template>
@@ -119,7 +120,7 @@
           </div>
         </template>
 			</ul>
-      <h5 class="">*Select at Most 3 Cleaners ({{this.cleaners.length}}/3)</h5>
+      <h5 class="">*Select up to 3 Cleaners ({{this.cleaners.length}}/3)</h5>
 			<ul class="mui-table-view" style="margin-bottom: 50px;">
         <template v-for="da in data">
 
@@ -185,7 +186,10 @@ export default {
       this.$router.push("/service");
     }
     this.order = this.$route.params.order;
-    this.cleaner_list = JSON.parse(localStorage.getItem('saved_cleaners'));
+    if (localStorage.getItem('saved_cleaners')){
+    }else{
+        this.cleaner_list = JSON.parse(localStorage.getItem('saved_cleaners'));
+    }
   },
   mounted() {
     //重置后退键
@@ -209,7 +213,7 @@ export default {
   methods: {
     dialog: function() {
       var btnArray = ["No", "Confirm"];
-      mui.confirm("You selected the ", "Fore", btnArray, e => {
+      mui.confirm("You selected the WiiCleaner", "WiiCleaner", btnArray, e => {
         if (e.index == 1) {
           let d = new Date(Date.parse(this.order.time + "Z"));
           let start_time = this.order.time.split("T")[1].substr(0, 5);
@@ -432,6 +436,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+#detail-button button,#showTooltips{
+  background:#fd5c63 !important ;
+  border-color: #fd5c63 !important ;
+}
 .mui-table-view-cell.mui-checkbox.mui-left {
   padding-left: 48px;
 }

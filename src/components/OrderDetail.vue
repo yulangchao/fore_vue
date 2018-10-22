@@ -83,9 +83,9 @@
 
 
         <ul v-if="pendding_cleaners.length > 0" class="mui-table-view"  style="margin-bottom:10px;">
-          <template v-if="pendding_cleaners.length > 0" v-for="pendding_cleaner of pendding_cleaners">
+          <template v-if="pendding_cleaners.length > 0" v-for="(pendding_cleaner, index) of pendding_cleaners">
             <div class="mui-table-view-cell mui-input-row mui-media mui-left">
-                <h4 v-if="pendding_cleaners.length > 0" class="font-bold pull-left"  style="color:#333; font-size:15px;margin-bottom:10px">Pending cleaners</h4>
+                <h4 v-if="pendding_cleaners.length > 0 && index==0" class="font-bold pull-left"  style="color:#333; font-size:15px;margin-bottom:10px">Pending cleaners</h4>
                 <img class="mui-media-object mui-pull-left" style="border-radius:100%" v-lazy="pendding_cleaner.avatar==null?url() : pendding_cleaner.avatar">
                 <!-- <button type="button" class="mui-btn mui-btn-primary view-btn" @click="dialog" >Select</button> -->
                 <h5 class="mui-pull-right"></h5>

@@ -2,7 +2,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			
-			<h1  style="color:white" class="mui-title">Serving Order</h1>
+			<h1  style="color:white" class="mui-title">Cleaners</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
 			<router-link to="/service" class="mui-tab-item">
@@ -26,7 +26,7 @@
       <div>
 				<div class="">
         <select v-model="city" @change="refresh()" style="float:left;padding:10px;border-right: 1px solid grey !important;border-radius: 0px;" class="mui-btn mui-btn-block">
-					<option value="0">All Cities</option>
+					<option value="0">All Locations</option>
 					<option value="1">Vancouver</option>
 					<option value="2">Richmond</option>
 					<option value="3">Burnaby</option>

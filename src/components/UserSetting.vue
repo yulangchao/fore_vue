@@ -27,7 +27,7 @@
 					<div class="weui-uploader__bd">
 							<ul class="weui-uploader__files" id="uploaderFiles">
 								<template v-for="image of images">
-									<img :src="image" @click="showImage(image)" :style="'width: 79px;height: 79px;position: absolute; left: 0; right: 0; margin: auto;border-radius:100%;'"></li>
+									<img :src="temp_image" @click="showImage(temp_image)" :style="'width: 79px;height: 79px;position: absolute; left: 0; right: 0; margin: auto;border-radius:100%;'"></li>
 								</template>
 							</ul>		
 							<div :style="'background-size: 100% 100%;position: absolute; left: 0; right: 0; margin: auto;border-radius:100%;background-image:url('+(user.avatar == null ? url():user.avatar) +')'" class="weui-uploader__input-box" v-if="images.length<1">
@@ -61,7 +61,8 @@ export default {
       loading: false,
       user: null,
       images: [],
-      selected_image: null
+      selected_image: null,
+      temp_image:""
     };
   },
   created() {
@@ -122,6 +123,7 @@ export default {
     filesChange: function(e) {
       this.loading = true;
       let date = new Date().toISOString().substring(0, 10);
+      this.images = [];
       let i = 0;
       for (let file of e.target.files) {
         this.loading = true;
@@ -131,7 +133,7 @@ export default {
           .put(file)
           .then(snapshot => {
             if (this.images.length < 5) {
-              
+              this.temp_image = URL.createObjectURL(file);
               this.images.push(snapshot.metadata.downloadURLs[0]);
               
             }
